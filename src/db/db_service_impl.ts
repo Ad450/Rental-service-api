@@ -17,22 +17,38 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             return;
         }
 
-        const { name, hash, date, isRented } = param.rent!;
+        const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent!;
 
         const existingBook = BookModel.findOne({ hash: hash });
         if (existingBook !== null || existingBook !== undefined) {
             return;
         }
 
-        const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, date: date });
+        const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
         newBook.save();
 
     }
     async update(param: DatabaseParam): Promise<void> {
-        throw new Error("Method not implemented.");
+        const { isUser } = param;
+
+        if (isUser) {
+            const { email, password, name } = param.user!;
+            UserModel.updateOne({ email: email }, { password: password, name: name });
+        }
+
+        const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent!;
+        BookModel.updateOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
     }
     async delete(param: DatabaseParam): Promise<void> {
-        throw new Error("Method not implemented.");
+        const { isUser } = param;
+
+        if (isUser) {
+            const { email, password, name } = param.user!;
+            UserModel.deleteOne({ email: email }, { password: password, name: name });
+        }
+
+        const { hash, isRented, rentedBy, startDate, endDate } = param.rent!;
+        BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
     }
     async get(param: DatabaseParam): Promise<DbReturnType | null> {
         const { isUser } = param;
@@ -65,7 +81,9 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             id: existingBookDoc!._id,
             hash: existingBookDoc!.hash,
             name: existingBookDoc!.name,
-            date: existingBookDoc!.date,
+            startDate: existingBookDoc!.startDate,
+            endDate: existingBookDoc!.endDate,
+            rentedBy: existingBookDoc!.rentedBy,
             isRented: existingBookDoc!.isRented,
         }
         const castResults: DbReturnType = {

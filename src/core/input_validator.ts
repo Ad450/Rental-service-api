@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
-import { resolve } from "path";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -63,3 +63,20 @@ export const generateAccessToken = async (req: Request): Promise<string> => {
     }
 }
 
+export const encryptPassword = async (req: Request): Promise<string> => {
+    try {
+        const salt = await bcrypt.genSalt(3);
+        return await bcrypt.hash(req.body.password, salt);
+    } catch (error) {
+        throw new Error("encryption failed");
+    }
+}
+
+export const comparePasswords = async (input: string, existingPassword: string): Promise<boolean> => {
+    try {
+        const results = await bcrypt.compare(input, existingPassword);
+        return results
+    } catch (error) {
+        throw new Error("password comparison failed");
+    }
+}

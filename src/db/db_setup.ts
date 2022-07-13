@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    name: {
+        type: String,
+        required: true
     }
 })
 
@@ -21,14 +25,22 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    date: {
+    startDate: {
+        type: String,
+        required: false
+    },
+    endDate: {
         type: String,
         required: false
     },
     isRented: {
         type: Boolean,
         required: true,
-    }
+    },
+    rentedBy: {
+        type: String,
+        required: true
+    },
 })
 
 export const BookModel = mongoose.model("Book", bookSchema)

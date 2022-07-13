@@ -10,13 +10,16 @@ export type DatabaseParam = {
 export type UserParam = {
     email: string;
     password: string;
+    name: string,
 }
 
 export type RentalParam = {
     name: string,
     hash: string,
-    date: string | undefined,
     isRented: boolean,
+    startDate: string,
+    endDate: string,
+    rentedBy: string,
 }
 
 export type UserFromDb = {
@@ -29,8 +32,10 @@ export type BookFromDb = {
     id: any,
     name: string,
     hash: string,
-    date: string | undefined,
+    startDate: string | undefined,
+    endDate: string | undefined,
     isRented: boolean,
+    rentedBy: string;
 }
 
 export type DbReturnType = {

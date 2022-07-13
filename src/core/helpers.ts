@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import bcrypt from "bcrypt";
+import assert from "assert";
 
 dotenv.config();
 
@@ -28,6 +29,20 @@ export const validateInput = async (req: Request, res: Response, isAuth: Auth, i
             res.status(401).json({
                 // TODO: to handle responses properly
                 "message": "invalid data"
+            })
+        }
+    }
+
+    if (isRental.isRental) {
+        try {
+
+            assert((req.body as Map<any, any>).has("name"));
+            assert((req.body as Map<any, any>).has("startDate"));
+            assert((req.body as Map<any, any>).has("endDate"));
+            assert((req.body as Map<any, any>).has("password"));
+        } catch (error) {
+            res.status(404).json({
+                "message": "invalid credentials"
             })
         }
     }
@@ -63,7 +78,7 @@ export const generateAccessToken = async (req: Request): Promise<string> => {
     }
 }
 
-export const encryptPassword = async (req: Request): Promise<string> => {
+export const encryptData = async (req: Request): Promise<string> => {
     try {
         const salt = await bcrypt.genSalt(3);
         return await bcrypt.hash(req.body.password, salt);
@@ -75,6 +90,17 @@ export const encryptPassword = async (req: Request): Promise<string> => {
 export const comparePasswords = async (input: string, existingPassword: string): Promise<boolean> => {
     try {
         const results = await bcrypt.compare(input, existingPassword);
+        return results
+    } catch (error) {
+        throw new Error("password comparison failed");
+    }
+}
+
+
+export const hashData = async (input: string): Promise<string> => {
+    try {
+        const salt = await bcrypt.genSalt(3);
+        const results = await bcrypt.hash(input, salt);
         return results
     } catch (error) {
         throw new Error("password comparison failed");

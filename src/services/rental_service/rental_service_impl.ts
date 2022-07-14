@@ -1,17 +1,45 @@
+import RentalServiceHandler from "../../handlers/rental_service_handler";
+import { BookFromDb } from "../../interfaces/database_service_param";
 import RentalServiceParam from "../../interfaces/rental_service_param";
 import RentalService from "./rental_service";
 
 export default class RentalServiceImpl extends RentalService<RentalServiceParam>{
-    rentBook(param: RentalServiceParam): Promise<void> {
-        throw new Error("Method not implemented.");
+    rentalServiceHandler: RentalServiceHandler;
+
+    constructor(rentalServiceHandler: RentalServiceHandler) {
+        super();
+        this.rentalServiceHandler = rentalServiceHandler;
     }
-    turnInBook(param: RentalServiceParam): Promise<void> {
-        throw new Error("Method not implemented.");
+    async rentBook(param: RentalServiceParam): Promise<void> {
+        const { req, res, next } = param;
+        try {
+            this.rentalServiceHandler.rentBook(req, res, next);
+        } catch (error) {
+            // TODO: use logger
+            console.log(error);
+        }
     }
-    getBook(param: RentalServiceParam): Promise<void> {
-        throw new Error("Method not implemented.");
+    async turnInBook(param: RentalServiceParam): Promise<void> {
+        const { req, res, next } = param;
+        try {
+            this.rentalServiceHandler.turnInBook(req, res);
+        } catch (error) {
+            // TODO: use logger
+            console.log(error);
+        }
     }
-    getAllBook(param: RentalServiceParam): Promise<void> {
+    async getBook(param: RentalServiceParam): Promise<BookFromDb | null> {
+        const { req, res, next } = param;
+        try {
+            const result = await this.rentalServiceHandler.getBook(req, res);
+            return result;
+        } catch (error) {
+            // TODO: use logger
+            console.log(error);
+            return null;
+        }
+    }
+    async getAllBook(param: RentalServiceParam): Promise<void> {
         throw new Error("Method not implemented.");
     }
 }

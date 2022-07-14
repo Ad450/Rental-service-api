@@ -1,16 +1,25 @@
 import { Request, Response, NextFunction } from "express";
 import BaseUsecase from "../../core/typedefs";
-import RentRepository from "../../Repository/rental_repo/rent_repo";
+import RentalServiceParam from "../../interfaces/rental_service_param";
+import UsecaseParam from "../../interfaces/usecase_params";
+import RentalService from "../../services/rental_service/rental_service";
 
-export default class GetBook implements BaseUsecase {
-    rentRepository: RentRepository;
+export default class GetBook implements BaseUsecase<UsecaseParam> {
+    rentService: RentalService<RentalServiceParam>;
 
-    constructor(rentRepository: RentRepository) {
-        this.rentRepository = rentRepository;
+    constructor(rentService: RentalService<RentalServiceParam>) {
+        this.rentService = rentService;
     }
-    async call(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    async call(param: UsecaseParam): Promise<void> {
+        const { req, res, next } = param;
+        const serviceParams: RentalServiceParam = {
+            req: req,
+            res: res,
+            next: next
+        }
         try {
-            await this.rentRepository.getBook(req, res, next);
+            this.rentService.getBook(serviceParams);
         } catch (error) {
             console.warn(error);
         }

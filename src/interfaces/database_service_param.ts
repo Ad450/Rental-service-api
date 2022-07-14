@@ -8,18 +8,18 @@ export type DatabaseParam = {
 }
 
 export type UserParam = {
-    email: string;
-    password: string;
-    name: string,
+    email: string | null | undefined;
+    password: string | null | undefined;
+    name: string | null | undefined,
 }
 
 export type RentalParam = {
-    name: string,
-    hash: string,
-    isRented: boolean,
-    startDate: string,
-    endDate: string,
-    rentedBy: string,
+    name: string | null | undefined,
+    hash: string | null | undefined,
+    isRented: boolean | null | undefined,
+    startDate: string | null | undefined,
+    endDate: string | null | undefined,
+    rentedBy: string | null | undefined,
 }
 
 export type UserFromDb = {
@@ -32,8 +32,8 @@ export type BookFromDb = {
     id: any,
     name: string,
     hash: string,
-    startDate: string | undefined,
-    endDate: string | undefined,
+    startDate: string | null | undefined,
+    endDate: string | null | undefined,
     isRented: boolean,
     rentedBy: string;
 }

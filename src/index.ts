@@ -1,6 +1,8 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
+import { routers } from "./Routers/endpoints";
+import { connectMongoose } from "./db/db_setup";
 
 dotenv.config();
 
@@ -8,6 +10,36 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.listen(process.env.SERVER_PORT, () => {
-    console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
-})
+
+const signupIndex = 0;
+const loginIndex = 1;
+const getUserIndex = 2;
+const getAllUsersIndex = 3;
+const rentBookIndex = 4;
+const turnInBookIndex = 5;
+const getBookIndex = 6;
+const getAllBooksIndex = 7;
+
+
+app.post(routers[signupIndex].route, routers[signupIndex].handlers);
+app.post(routers[loginIndex].route, routers[loginIndex].handlers);
+app.post(routers[getUserIndex].route, routers[getUserIndex].handlers);
+app.post(routers[getAllUsersIndex].route, routers[getAllUsersIndex].handlers);
+app.post(routers[rentBookIndex].route, routers[rentBookIndex].handlers);
+app.post(routers[turnInBookIndex].route, routers[turnInBookIndex].handlers);
+app.post(routers[getBookIndex].route, routers[getBookIndex].handlers);
+app.post(routers[getAllBooksIndex].route, routers[getAllBooksIndex].handlers);
+
+const startApp = async () => {
+    try {
+        app.listen(process.env.SERVER_PORT || 3000, () => {
+            console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
+        });
+        await connectMongoose()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/// execution starts here 
+startApp();

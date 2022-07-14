@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import assert from "assert";
+import { resolve } from "path";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ export const validateInput = async (req: Request, res: Response, isAuth: Auth, i
                 "message": "invalid data"
             })
         }
+        refineInput(req, res);
     }
 
     if (isRental.isRental) {
@@ -106,3 +108,22 @@ export const hashData = async (input: string): Promise<string> => {
         throw new Error("password comparison failed");
     }
 }
+
+const refineInput = (req: Request, res: Response) => {
+    /// Name with at least 4 digits
+    /// Name without special characters ^ < > ( ) \[ \] \\\ / . , ; : \s @ ’
+    /// E-mail must have @
+    /// Domain name with at least 4 digits
+    /// Domain name without special characters ^ < > ( ) \[ \] \\\ / . , ; : \s @ ’
+    /// Domain extension only .com or .net
+    const emailRegex: RegExp = /([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\@([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\.(com|net)/;
+
+    if (!emailRegex.test(req.body.email)) res.status(404).json({ "message": "invalid credentials" })
+
+    /// Password at least 6 digits.
+    /// At least one lowercase
+    /// At least one uppercase
+    /// At least one special character from @ # $ % ^ & *
+    const passwordRegex: RegExp = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
+    if (!passwordRegex.test(req.body.password)) res.status(404).json({ "message": "invalid credentials" })
+}   

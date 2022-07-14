@@ -1,5 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class AuthenticationRepository {
+class AuthService {
 }
-exports.default = AuthenticationRepository;
+exports.default = AuthService;

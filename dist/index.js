@@ -29,9 +29,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const endpoints_1 = require("./Routers/endpoints");
+const db_setup_1 = require("./db/db_setup");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
-app.listen(process.env.SERVER_PORT, () => {
-    console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
-});
+const signupIndex = 0;
+const loginIndex = 1;
+const getUserIndex = 2;
+const getAllUsersIndex = 3;
+const rentBookIndex = 4;
+const turnInBookIndex = 5;
+const getBookIndex = 6;
+const getAllBooksIndex = 7;
+app.post(endpoints_1.routers[signupIndex].route, endpoints_1.routers[signupIndex].handlers);
+app.post(endpoints_1.routers[loginIndex].route, endpoints_1.routers[loginIndex].handlers);
+app.post(endpoints_1.routers[getUserIndex].route, endpoints_1.routers[getUserIndex].handlers);
+app.post(endpoints_1.routers[getAllUsersIndex].route, endpoints_1.routers[getAllUsersIndex].handlers);
+app.post(endpoints_1.routers[rentBookIndex].route, endpoints_1.routers[rentBookIndex].handlers);
+app.post(endpoints_1.routers[turnInBookIndex].route, endpoints_1.routers[turnInBookIndex].handlers);
+app.post(endpoints_1.routers[getBookIndex].route, endpoints_1.routers[getBookIndex].handlers);
+app.post(endpoints_1.routers[getAllBooksIndex].route, endpoints_1.routers[getAllBooksIndex].handlers);
+const startApp = async () => {
+    try {
+        app.listen(process.env.SERVER_PORT || 3000, () => {
+            console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
+        });
+        await (0, db_setup_1.connectMongoose)();
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+/// execution starts here 
+startApp();

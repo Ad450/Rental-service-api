@@ -1,5 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class RentRepository {
+class RentalService {
 }
-exports.default = RentRepository;
+exports.default = RentalService;

@@ -16,6 +16,7 @@ const login: string = "/login";
 
 
 
+
 export const routers: Array<EndpointsInterface> = [
     /// Authentication
     {
@@ -37,11 +38,6 @@ export const routers: Array<EndpointsInterface> = [
         route: getAllUsers,
         method: routerMethods.GET,
         handlers: (req: Request, res: Response, next: NextFunction) => Injector.getAllUsers.call({ req, res, next })
-    },
-    {
-        route: getUser,
-        method: routerMethods.GET,
-        handlers: (req: Request, res: Response, next: NextFunction) => Injector.getUser.call({ req, res, next })
     },
 
     /// Rental Service

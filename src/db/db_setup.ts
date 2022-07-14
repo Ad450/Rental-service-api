@@ -43,5 +43,10 @@ const bookSchema = new mongoose.Schema({
     },
 })
 
+
+export const connectMongoose = async () => {
+    await mongoose.connect(process.env.DATABASE_URL || "");
+}
+
 export const BookModel = mongoose.model("Book", bookSchema)
 export const UserModel = mongoose.model("User", userSchema);

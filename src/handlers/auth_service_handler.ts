@@ -13,10 +13,10 @@ export default class AuthServiceHandler {
     }
 
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
-        await validateInput(req, res, { isSignup: true, isLogin: false }, { isRental: false });
+        if (await validateInput(req, res, { isSignup: true, isLogin: false }, { isRental: false }) === false) res.end();
+        // testing
+        console.log(await validateInput(req, res, { isSignup: true, isLogin: false }, { isRental: false }));
 
-        const accessToken = await generateAccessToken(req);
-        res.setHeader("authorization", `Bearer ${accessToken}`);
 
         // hash password with bycrypt and insert user data into db
         const encryptedPassword = await encryptData(req.body.password);
@@ -27,13 +27,22 @@ export default class AuthServiceHandler {
             name: req.body.email,
         }
         try {
-            this.dbService.create({ user: userData, rent: null, isUser: true });
+            await this.dbService.create({ user: userData, rent: null, isUser: true });
+
+            const accessToken = await generateAccessToken(req);
+            res.setHeader("authorization", `Bearer ${accessToken}`);
+
+            res.status(200).set("content-type", "application/json").json(userData);
         } catch (error) {
-            res.status(500).json({
-                "message": "server error"
+            // testing
+            console.log("error was caught");
+
+            res.status(404).json({
+                "message": "user already existing"
             })
+            process.exit();
         }
-        res.status(200).set("content-type", "application/json").json(userData);
+
     }
 
     async login(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from "express";
 
 export default interface EndpointsInterface {
     route: string,
-    method: METHODS,
+    method: routerMethods,
     handlers: (req: Request, res: Response, next: NextFunction) => {}
 }
 
 
-enum METHODS {
+export enum routerMethods {
     POST,
     GET,
     PATCH,

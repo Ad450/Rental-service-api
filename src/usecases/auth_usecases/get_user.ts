@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction } from "express";
 import BaseUsecase from "../../core/typedefs";
 import { AuthServiceParam } from "../../interfaces/auth_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
 import AuthService from "../../services/auth_service/auth_service";
 
-export default class GetUsers implements BaseUsecase<UsecaseParam>{
+export default class GetUser implements BaseUsecase<UsecaseParam>{
     authService: AuthService<AuthServiceParam>;
 
     constructor(authService: AuthService<AuthServiceParam>) {

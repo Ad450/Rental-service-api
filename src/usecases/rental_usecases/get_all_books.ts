@@ -4,7 +4,7 @@ import RentalServiceParam from "../../interfaces/rental_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
 import RentalService from "../../services/rental_service/rental_service";
 
-export default class GetBook implements BaseUsecase<UsecaseParam>{
+export default class GetAllBooks implements BaseUsecase<UsecaseParam>{
     rentService: RentalService<RentalServiceParam>;
 
     constructor(rentService: RentalService<RentalServiceParam>) {

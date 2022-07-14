@@ -3,11 +3,10 @@ import { BookFromDb } from "../../interfaces/database_service_param";
 import RentalServiceParam from "../../interfaces/rental_service_param";
 import RentalService from "./rental_service";
 
-export default class RentalServiceImpl extends RentalService<RentalServiceParam>{
+export default class RentalServiceImpl implements RentalService<RentalServiceParam>{
     rentalServiceHandler: RentalServiceHandler;
 
     constructor(rentalServiceHandler: RentalServiceHandler) {
-        super();
         this.rentalServiceHandler = rentalServiceHandler;
     }
     async rentBook(param: RentalServiceParam): Promise<void> {

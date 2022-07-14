@@ -3,11 +3,10 @@ import { AuthServiceParam } from "../../interfaces/auth_service_param";
 import { UserFromDb } from "../../interfaces/database_service_param";
 import AuthService from "./auth_service";
 
-export default class AuthServiceImpl extends AuthService<AuthServiceParam>{
+export default class AuthServiceImpl implements AuthService<AuthServiceParam>{
     authServiceHandler: AuthServiceHandler;
 
     constructor(authServiceHandler: AuthServiceHandler) {
-        super();
         this.authServiceHandler = authServiceHandler;
     }
 

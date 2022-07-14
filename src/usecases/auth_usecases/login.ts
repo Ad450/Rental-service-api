@@ -11,7 +11,6 @@ export default class Login implements BaseUsecase<UsecaseParam>{
         this.authService = authService;
     }
 
-
     async call(param: UsecaseParam): Promise<void> {
         const { req, res, next } = param;
         const serviceParams: AuthServiceParam = {

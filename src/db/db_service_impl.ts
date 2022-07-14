@@ -7,14 +7,22 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
         const { isUser } = param;
 
         if (isUser) {
-            const { email, password } = param.user!;
+            // testing 
+            console.log("db call got here");
+
+            const { email, password, name } = param.user!;
             const existingUser = await UserModel.findOne({ email: email });
-            if (existingUser !== null || existingUser !== undefined) {
+            if (existingUser) {
+                // testing
+                console.log("user already existing");
+                throw new Error("user already existing");
+                //process.exit();
+
+            } else {
+                const user = new UserModel({ email: email, password: password, name: name });
+                await user.save();
                 return;
             }
-            const user = new UserModel({ email: email, password: password });
-            await user.save();
-            return;
         }
 
         const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent!;

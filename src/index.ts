@@ -21,7 +21,7 @@ const getBookIndex = 6;
 const getAllBooksIndex = 7;
 
 
-app.post(routers[signupIndex].route, routers[signupIndex].handlers);
+app.post(routers[signupIndex].route, routers[signupIndex].middlewares, routers[signupIndex].handlers);
 app.post(routers[loginIndex].route, routers[loginIndex].handlers);
 app.post(routers[getUserIndex].route, routers[getUserIndex].handlers);
 app.post(routers[getAllUsersIndex].route, routers[getAllUsersIndex].handlers);

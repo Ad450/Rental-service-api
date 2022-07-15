@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import {
     encryptData as encryptPassword,
     hashData,
-    validateInput,
 } from "../core/helpers";
 import DatabaseService from "../db/db_service";
 import { DatabaseParam, BookFromDb } from "../interfaces/database_service_param";
@@ -15,12 +14,6 @@ export default class RentalServiceHandler {
     }
 
     async rentBook(req: Request, res: Response, next: NextFunction) {
-        await validateInput(
-            req,
-            res,
-            { isSignup: false, isLogin: false },
-            { isRental: true }
-        );
         const encryptedPassword = await encryptPassword(req);
         const hash = await hashData(req.body.name);
 
@@ -80,12 +73,6 @@ export default class RentalServiceHandler {
     }
 
     async turnInBook(req: Request, res: Response) {
-        await validateInput(
-            req,
-            res,
-            { isSignup: false, isLogin: false },
-            { isRental: true }
-        );
         const hash = await hashData(req.body.name);
 
         try {
@@ -112,7 +99,6 @@ export default class RentalServiceHandler {
     }
 
     async getBook(req: Request, res: Response): Promise<BookFromDb | null> {
-        validateInput(req, res, { isLogin: false, isSignup: false }, { isRental: true });
         const encryptedPassword = await encryptPassword(req);
         const hash = await hashData(req.body.name);
         try {

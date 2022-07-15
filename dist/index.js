@@ -42,7 +42,7 @@ const rentBookIndex = 4;
 const turnInBookIndex = 5;
 const getBookIndex = 6;
 const getAllBooksIndex = 7;
-app.post(endpoints_1.routers[signupIndex].route, endpoints_1.routers[signupIndex].handlers);
+app.post(endpoints_1.routers[signupIndex].route, endpoints_1.routers[signupIndex].middlewares, endpoints_1.routers[signupIndex].handlers);
 app.post(endpoints_1.routers[loginIndex].route, endpoints_1.routers[loginIndex].handlers);
 app.post(endpoints_1.routers[getUserIndex].route, endpoints_1.routers[getUserIndex].handlers);
 app.post(endpoints_1.routers[getAllUsersIndex].route, endpoints_1.routers[getAllUsersIndex].handlers);

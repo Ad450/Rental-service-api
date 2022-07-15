@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerMethods = void 0;
+// export interface IMiddleware {
+//     middleware: (req: Request, res: Response, next: NextFunction) => {}
+// }
 var routerMethods;
 (function (routerMethods) {
     routerMethods[routerMethods["POST"] = 0] = "POST";

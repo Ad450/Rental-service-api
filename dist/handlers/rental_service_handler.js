@@ -6,7 +6,6 @@ class RentalServiceHandler {
         this.dbService = dbService;
     }
     async rentBook(req, res, next) {
-        await (0, helpers_1.validateInput)(req, res, { isSignup: false, isLogin: false }, { isRental: true });
         const encryptedPassword = await (0, helpers_1.encryptData)(req);
         const hash = await (0, helpers_1.hashData)(req.body.name);
         try {
@@ -61,7 +60,6 @@ class RentalServiceHandler {
         });
     }
     async turnInBook(req, res) {
-        await (0, helpers_1.validateInput)(req, res, { isSignup: false, isLogin: false }, { isRental: true });
         const hash = await (0, helpers_1.hashData)(req.body.name);
         try {
             this.dbService.update({
@@ -87,7 +85,6 @@ class RentalServiceHandler {
         }
     }
     async getBook(req, res) {
-        (0, helpers_1.validateInput)(req, res, { isLogin: false, isSignup: false }, { isRental: true });
         const encryptedPassword = await (0, helpers_1.encryptData)(req);
         const hash = await (0, helpers_1.hashData)(req.body.name);
         try {

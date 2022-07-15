@@ -6,10 +6,6 @@ class AuthServiceHandler {
         this.dbService = dbService;
     }
     async signup(req, res, next) {
-        if (await (0, helpers_1.validateInput)(req, res, { isSignup: true, isLogin: false }, { isRental: false }) === false)
-            res.end();
-        // testing
-        console.log(await (0, helpers_1.validateInput)(req, res, { isSignup: true, isLogin: false }, { isRental: false }));
         // hash password with bycrypt and insert user data into db
         const encryptedPassword = await (0, helpers_1.encryptData)(req.body.password);
         const userData = {
@@ -21,19 +17,17 @@ class AuthServiceHandler {
             await this.dbService.create({ user: userData, rent: null, isUser: true });
             const accessToken = await (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
-            res.status(200).set("content-type", "application/json").json(userData);
+            res.status(200).set("content-type", "application/json").json(userData).end();
         }
         catch (error) {
             // testing
             console.log("error was caught");
             res.status(404).json({
-                "message": "user already existing"
-            });
-            process.exit();
+                "message": "user already exists"
+            }).end();
         }
     }
     async login(req, res, next) {
-        await (0, helpers_1.validateInput)(req, res, { isSignup: false, isLogin: true }, { isRental: false });
         // double check password
         const requestPassword = req.body.password;
         const newlyEncryptedPassword = await (0, helpers_1.encryptData)(requestPassword);

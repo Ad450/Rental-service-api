@@ -1,6 +1,8 @@
 import assert from "assert";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { comparePasswords, hashData } from "../core/helpers";
+import Injector from "../di/injector";
 
 export type Auth = {
     isSignup: boolean;
@@ -77,13 +79,41 @@ export const refineAuthInput = async (req: Request, res: Response, next: NextFun
     /// Domain extension only .com or .net
     const emailRegex: RegExp = /([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\@([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\.(com|net)/;
 
-    if (!emailRegex.test(req.body.email)) res.status(401).json({ "message": "invalid credentials" }).end();
+    if (!emailRegex.test(req.body.email)) res.status(401).json({ "message": "invalid email credentials" }).end();
 
     /// Password at least 6 digits.
     /// At least one lowercase
     /// At least one uppercase
     /// At least one special character from @ # $ % ^ & *
     const passwordRegex: RegExp = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-    if (!passwordRegex.test(req.body.password)) res.status(401).json({ "message": "invalid credentials" }).end();
+    if (!passwordRegex.test(req.body.password)) res.status(401).json({ "message": "invalid password credentials" }).end();
     next();
-}   
+}
+
+
+export const validateLoginPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const requestPassword = req.body.password;
+    const newlyEncryptedPassword = await hashData(requestPassword);
+    const returnType = await Injector.db.get({ isUser: true, user: { email: req.body.email, password: newlyEncryptedPassword, name: req.body.name }, rent: null });
+
+    if (returnType === null || returnType === undefined) {
+        res.status(404).json({
+            "message": "user not found"
+        }).end();
+    }
+
+    try {
+        const { user } = returnType!;
+        const oldEncryptedPassword = user!.password;
+
+        if (!await comparePasswords(newlyEncryptedPassword, oldEncryptedPassword)) res.status(404).json({
+            "message": "invalid login credentials"
+        }).end();
+
+        next();
+    } catch (error) {
+        res.status(500).json({
+            "message": "server error"
+        }).end()
+    }
+}

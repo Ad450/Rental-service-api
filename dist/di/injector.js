@@ -19,6 +19,7 @@ const turn_in_book_1 = __importDefault(require("../usecases/rental_usecases/turn
 class Injector {
 }
 exports.default = Injector;
+/// usecases
 Injector.login = new login_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
 Injector.signup = new signup_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
 Injector.getUser = new get_user_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
@@ -27,3 +28,5 @@ Injector.getBook = new get_all_books_2.default(new rental_service_impl_1.default
 Injector.getAllBooks = new get_all_books_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
 Injector.rentBook = new rent_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
 Injector.turnInBook = new turn_in_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
+/// database
+Injector.db = new db_service_impl_1.default();

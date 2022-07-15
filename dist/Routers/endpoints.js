@@ -29,7 +29,7 @@ exports.routers = [
         route: login,
         method: endpoints_interface_1.routerMethods.POST,
         handlers: (req, res, next) => injector_1.default.login.call({ req, res, next }),
-        middlewares: [validators_1.refineAuthInput, validators_1.validateToken, validators_1.validateAuthInput]
+        middlewares: [validators_1.refineAuthInput, validators_1.validateToken, validators_1.validateAuthInput, validators_1.validateLoginPassword]
     },
     {
         route: getUser,

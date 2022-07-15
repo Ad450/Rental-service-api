@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refineAuthInput = exports.validateAuthInput = exports.validateRentalInput = exports.validateToken = void 0;
+exports.validateLoginPassword = exports.refineAuthInput = exports.validateAuthInput = exports.validateRentalInput = exports.validateToken = void 0;
 const assert_1 = __importDefault(require("assert"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const helpers_1 = require("../core/helpers");
+const injector_1 = __importDefault(require("../di/injector"));
 const validateToken = async (req, res, next) => {
     try {
         const headers = req.headers["authorization"];
@@ -72,14 +74,39 @@ const refineAuthInput = async (req, res, next) => {
     /// Domain extension only .com or .net
     const emailRegex = /([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\@([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\.(com|net)/;
     if (!emailRegex.test(req.body.email))
-        res.status(401).json({ "message": "invalid credentials" }).end();
+        res.status(401).json({ "message": "invalid email credentials" }).end();
     /// Password at least 6 digits.
     /// At least one lowercase
     /// At least one uppercase
     /// At least one special character from @ # $ % ^ & *
     const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
     if (!passwordRegex.test(req.body.password))
-        res.status(401).json({ "message": "invalid credentials" }).end();
+        res.status(401).json({ "message": "invalid password credentials" }).end();
     next();
 };
 exports.refineAuthInput = refineAuthInput;
+const validateLoginPassword = async (req, res, next) => {
+    const requestPassword = req.body.password;
+    const newlyEncryptedPassword = await (0, helpers_1.hashData)(requestPassword);
+    const returnType = await injector_1.default.db.get({ isUser: true, user: { email: req.body.email, password: newlyEncryptedPassword, name: req.body.name }, rent: null });
+    if (returnType === null || returnType === undefined) {
+        res.status(404).json({
+            "message": "user not found"
+        }).end();
+    }
+    try {
+        const { user } = returnType;
+        const oldEncryptedPassword = user.password;
+        if (!await (0, helpers_1.comparePasswords)(newlyEncryptedPassword, oldEncryptedPassword))
+            res.status(404).json({
+                "message": "invalid login credentials"
+            }).end();
+        next();
+    }
+    catch (error) {
+        res.status(500).json({
+            "message": "server error"
+        }).end();
+    }
+};
+exports.validateLoginPassword = validateLoginPassword;

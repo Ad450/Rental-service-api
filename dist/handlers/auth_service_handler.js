@@ -7,7 +7,7 @@ class AuthServiceHandler {
     }
     async signup(req, res, next) {
         // hash password with bycrypt and insert user data into db
-        const encryptedPassword = await (0, helpers_1.encryptData)(req.body.password);
+        const encryptedPassword = await (0, helpers_1.hashData)(req.body.password);
         const userData = {
             email: req.body.email,
             password: encryptedPassword,
@@ -28,32 +28,17 @@ class AuthServiceHandler {
         }
     }
     async login(req, res, next) {
-        // double check password
-        const requestPassword = req.body.password;
-        const newlyEncryptedPassword = await (0, helpers_1.encryptData)(requestPassword);
-        const returnType = await this.dbService.get({ isUser: true, user: { email: req.body.email, password: newlyEncryptedPassword, name: req.body.name }, rent: null });
-        if (returnType === null || returnType === undefined) {
-            res.status(404).json({
-                "message": "user not found"
-            });
-        }
         try {
-            const { user } = returnType;
-            const oldEncryptedPassword = user.password;
-            if (!await (0, helpers_1.comparePasswords)(newlyEncryptedPassword, oldEncryptedPassword))
-                res.status(404).json({
-                    "message": "invalid login credentials"
-                });
-            const accessToken = (0, helpers_1.encryptData)(req);
+            const accessToken = (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
             res.status(200).json({
                 "message": "login succesful"
-            });
+            }).end();
         }
         catch (error) {
             res.status(500).json({
                 "message": "server error"
-            });
+            }).end();
         }
     }
 }

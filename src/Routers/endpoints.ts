@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Injector from "../di/injector";
-import { refineAuthInput, validateAuthInput, validateRentalInput, validateToken } from "../middlewares/validators";
+import { refineAuthInput, validateAuthInput, validateLoginPassword, validateRentalInput, validateToken } from "../middlewares/validators";
 import EndpointsInterface, { routerMethods } from "./endpoints_interface";
 
 // Rentals
@@ -30,7 +30,7 @@ export const routers: Array<EndpointsInterface> = [
         route: login,
         method: routerMethods.POST,
         handlers: (req: Request, res: Response, next: NextFunction) => Injector.login.call({ req, res, next }),
-        middlewares: [refineAuthInput, validateToken, validateAuthInput]
+        middlewares: [refineAuthInput, validateToken, validateAuthInput, validateLoginPassword]
     },
     {
         route: getUser,

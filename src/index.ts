@@ -22,13 +22,13 @@ const getAllBooksIndex = 7;
 
 
 app.post(routers[signupIndex].route, routers[signupIndex].middlewares, routers[signupIndex].handlers);
-app.post(routers[loginIndex].route, routers[loginIndex].handlers);
-app.post(routers[getUserIndex].route, routers[getUserIndex].handlers);
-app.post(routers[getAllUsersIndex].route, routers[getAllUsersIndex].handlers);
-app.post(routers[rentBookIndex].route, routers[rentBookIndex].handlers);
-app.post(routers[turnInBookIndex].route, routers[turnInBookIndex].handlers);
-app.post(routers[getBookIndex].route, routers[getBookIndex].handlers);
-app.post(routers[getAllBooksIndex].route, routers[getAllBooksIndex].handlers);
+app.post(routers[loginIndex].route, routers[loginIndex].middlewares, routers[loginIndex].handlers);
+app.post(routers[getUserIndex].route, routers[getUserIndex].middlewares, routers[getUserIndex].handlers);
+app.post(routers[getAllUsersIndex].route, routers[getAllUsersIndex].middlewares, routers[getAllUsersIndex].handlers);
+app.post(routers[rentBookIndex].route, routers[rentBookIndex].middlewares, routers[rentBookIndex].handlers);
+app.post(routers[turnInBookIndex].route, routers[turnInBookIndex].middlewares, routers[turnInBookIndex].handlers);
+app.post(routers[getBookIndex].route, routers[getBookIndex].middlewares, routers[getBookIndex].handlers);
+app.post(routers[getAllBooksIndex].route, routers[getAllBooksIndex].middlewares, routers[getAllBooksIndex].handlers);
 
 const startApp = async () => {
     try {

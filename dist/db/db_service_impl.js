@@ -25,13 +25,21 @@ class DatabaseServiceImpl extends db_service_1.default {
                 return;
             }
         }
-        const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent;
-        const existingBook = db_setup_1.BookModel.findOne({ hash: hash });
-        if (existingBook !== null || existingBook !== undefined) {
-            return;
+        else {
+            const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent;
+            // testing ........
+            console.log(param.rent);
+            const existingBook = db_setup_1.BookModel.findOne({ hash: hash });
+            // testing......
+            console.log(existingBook.lean());
+            if (existingBook !== null || existingBook !== undefined) {
+                // testing ..........
+                console.log("call entered existingBook !== null");
+                return;
+            }
+            const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
+            newBook.save();
         }
-        const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
-        newBook.save();
     }
     async update(param) {
         const { isUser } = param;
@@ -39,8 +47,10 @@ class DatabaseServiceImpl extends db_service_1.default {
             const { email, password, name } = param.user;
             db_setup_1.UserModel.updateOne({ email: email }, { password: password, name: name });
         }
-        const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent;
-        db_setup_1.BookModel.updateOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+        else {
+            const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent;
+            db_setup_1.BookModel.updateOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+        }
     }
     async delete(param) {
         const { isUser } = param;
@@ -48,8 +58,10 @@ class DatabaseServiceImpl extends db_service_1.default {
             const { email, password, name } = param.user;
             db_setup_1.UserModel.deleteOne({ email: email }, { password: password, name: name });
         }
-        const { hash, isRented, rentedBy, startDate, endDate } = param.rent;
-        db_setup_1.BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+        else {
+            const { hash, isRented, rentedBy, startDate, endDate } = param.rent;
+            db_setup_1.BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+        }
     }
     async get(param) {
         const { isUser } = param;
@@ -70,25 +82,27 @@ class DatabaseServiceImpl extends db_service_1.default {
             };
             return castResults;
         }
-        const { hash } = param.rent;
-        const existingBookDoc = await db_setup_1.BookModel.findOne({ hash: hash }).lean();
-        if (existingBookDoc === undefined || existingBookDoc === null) {
-            return null;
+        else {
+            const { hash } = param.rent;
+            const existingBookDoc = await db_setup_1.BookModel.findOne({ hash: hash }).lean();
+            if (existingBookDoc === undefined || existingBookDoc === null) {
+                return null;
+            }
+            const _rent = {
+                id: existingBookDoc._id,
+                hash: existingBookDoc.hash,
+                name: existingBookDoc.name,
+                startDate: existingBookDoc.startDate,
+                endDate: existingBookDoc.endDate,
+                rentedBy: existingBookDoc.rentedBy,
+                isRented: existingBookDoc.isRented,
+            };
+            const castResults = {
+                user: null,
+                rent: _rent
+            };
+            return castResults;
         }
-        const _rent = {
-            id: existingBookDoc._id,
-            hash: existingBookDoc.hash,
-            name: existingBookDoc.name,
-            startDate: existingBookDoc.startDate,
-            endDate: existingBookDoc.endDate,
-            rentedBy: existingBookDoc.rentedBy,
-            isRented: existingBookDoc.isRented,
-        };
-        const castResults = {
-            user: null,
-            rent: _rent
-        };
-        return castResults;
     }
     async getAll(param) {
         throw new Error("Method not implemented.");

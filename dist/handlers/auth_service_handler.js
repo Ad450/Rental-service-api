@@ -8,6 +8,7 @@ class AuthServiceHandler {
     async signup(req, res, next) {
         // hash password with bycrypt and insert user data into db
         const encryptedPassword = await (0, helpers_1.hashData)(req.body.password);
+        console.log(encryptedPassword);
         const userData = {
             email: req.body.email,
             password: encryptedPassword,

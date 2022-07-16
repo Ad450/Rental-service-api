@@ -34,6 +34,7 @@ const db_setup_1 = require("./db/db_setup");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
+/// index of routes in Endpoints array defined in Routers/endpoints
 const signupIndex = 0;
 const loginIndex = 1;
 const getUserIndex = 2;

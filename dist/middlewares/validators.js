@@ -31,10 +31,10 @@ const validateToken = async (req, res, next) => {
 exports.validateToken = validateToken;
 const validateRentalInput = async (req, res, next) => {
     try {
-        (0, assert_1.default)(req.body.has("name"));
-        (0, assert_1.default)(req.body.has("startDate"));
-        (0, assert_1.default)(req.body.has("endDate"));
-        (0, assert_1.default)(req.body.has("password"));
+        // assert((req.body as Map<any, any>).has("name"));
+        // assert((req.body as Map<any, any>).has("startDate"));
+        // assert((req.body as Map<any, any>).has("endDate"));
+        // assert((req.body as Map<any, any>).has("password"));
         (0, assert_1.default)(req.body.name !== undefined || null);
         (0, assert_1.default)(req.body.startDate !== undefined || null);
         (0, assert_1.default)(req.body.endDate !== undefined || null);
@@ -73,40 +73,57 @@ const refineAuthInput = async (req, res, next) => {
     /// Domain name without special characters ^ < > ( ) \[ \] \\\ / . , ; : \s @ ’
     /// Domain extension only .com or .net
     const emailRegex = /([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\@([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\.(com|net)/;
-    if (!emailRegex.test(req.body.email))
-        res.status(401).json({ "message": "invalid email credentials" }).end();
     /// Password at least 6 digits.
     /// At least one lowercase
     /// At least one uppercase
     /// At least one special character from @ # $ % ^ & *
     const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-    if (!passwordRegex.test(req.body.password))
-        res.status(401).json({ "message": "invalid password credentials" }).end();
-    next();
+    if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
+        if (!emailRegex.test(req.body.email) && !passwordRegex.test(req.body.password)) {
+            res.status(401).json({ "message": "invalid credentials" }).end();
+        }
+        else if (!passwordRegex.test(req.body.password)) {
+            res.status(401).json({ "message": "invalid password credentials" }).end();
+        }
+        else if (!emailRegex.test(req.body.email)) {
+            res.status(401).json({ "message": "invalid password credentials" }).end();
+        }
+        else {
+            res.status(401).json({ "message": "invalid credentials" }).end();
+        }
+    }
+    else {
+        next();
+    }
 };
 exports.refineAuthInput = refineAuthInput;
 const validateLoginPassword = async (req, res, next) => {
     const requestPassword = req.body.password;
-    const newlyEncryptedPassword = await (0, helpers_1.hashData)(requestPassword);
-    const returnType = await injector_1.default.db.get({ isUser: true, user: { email: req.body.email, password: newlyEncryptedPassword, name: req.body.name }, rent: null });
+    /// Only email is used by db to retrieve user
+    /// Other params exist to prevent missing params compilation error
+    const returnType = await injector_1.default.db.get({ isUser: true, user: { email: req.body.email, password: requestPassword, name: req.body.name }, rent: null });
     if (returnType === null || returnType === undefined) {
         res.status(404).json({
             "message": "user not found"
         }).end();
     }
-    try {
-        const { user } = returnType;
-        const oldPassword = user.password;
-        if (!await (0, helpers_1.comparePasswords)(req.body.password, oldPassword))
-            res.status(404).json({
-                "message": "invalid login credentials"
+    else {
+        try {
+            const { user } = returnType;
+            const oldPassword = user.password;
+            const newPassword = req.body.password;
+            const isMatch = await (0, helpers_1.comparePasswords)(newPassword, oldPassword);
+            if (isMatch === false)
+                res.status(404).json({
+                    "message": "invalid login credentials"
+                }).end();
+            next();
+        }
+        catch (error) {
+            res.status(500).json({
+                "message": "server error"
             }).end();
-        next();
-    }
-    catch (error) {
-        res.status(500).json({
-            "message": "server error"
-        }).end();
+        }
     }
 };
 exports.validateLoginPassword = validateLoginPassword;

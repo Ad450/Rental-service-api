@@ -29,8 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.hashData = exports.comparePasswords = exports.encryptData = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv = __importStar(require("dotenv"));
-const crypto_1 = require("crypto");
-const util_1 = require("util");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 dotenv.config();
 const generateAccessToken = async (req) => {
     try {
@@ -57,12 +56,8 @@ const encryptData = async (req) => {
 exports.encryptData = encryptData;
 const comparePasswords = async (input, existingPassword) => {
     try {
-        //const results = await bcrypt.compare(input, existingPassword);
-        // testing
-        if (input === existingPassword) {
-            return true;
-        }
-        return false;
+        const results = await bcrypt_1.default.compare(input, existingPassword);
+        return results;
     }
     catch (error) {
         console.log(error);
@@ -72,10 +67,9 @@ const comparePasswords = async (input, existingPassword) => {
 exports.comparePasswords = comparePasswords;
 const hashData = async (input) => {
     try {
-        const salt = (0, crypto_1.randomBytes)(5).toString("hex");
-        const scryptAsync = (0, util_1.promisify)(crypto_1.scrypt);
-        const hash = (await scryptAsync(input, salt, 40));
-        return hash.toString("hex");
+        const hash = await bcrypt_1.default.hash(input, 4);
+        console.log(hash);
+        return hash;
     }
     catch (error) {
         throw new Error("password comparison failed");

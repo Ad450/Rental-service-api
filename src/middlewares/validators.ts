@@ -17,7 +17,7 @@ export type Rental = {
 export const validateToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const headers = req.headers["authorization"];
-        if (!headers) {
+        if (headers === undefined) {
             res.status(401).json({
                 "message": "authorizatoin failed"
             }).end();
@@ -36,10 +36,10 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
 
 export const validateRentalInput = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        assert((req.body as Map<any, any>).has("name"));
-        assert((req.body as Map<any, any>).has("startDate"));
-        assert((req.body as Map<any, any>).has("endDate"));
-        assert((req.body as Map<any, any>).has("password"));
+        // assert((req.body as Map<any, any>).has("name"));
+        // assert((req.body as Map<any, any>).has("startDate"));
+        // assert((req.body as Map<any, any>).has("endDate"));
+        // assert((req.body as Map<any, any>).has("password"));
         assert(req.body.name !== undefined || null);
         assert(req.body.startDate !== undefined || null);
         assert(req.body.endDate !== undefined || null);
@@ -78,42 +78,57 @@ export const refineAuthInput = async (req: Request, res: Response, next: NextFun
     /// Domain name without special characters ^ < > ( ) \[ \] \\\ / . , ; : \s @ ’
     /// Domain extension only .com or .net
     const emailRegex: RegExp = /([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\@([A-Z]|[a-z]|[^<>()\[\]\\\/.,;:\s@"]){4,}\.(com|net)/;
-
-    if (!emailRegex.test(req.body.email)) res.status(401).json({ "message": "invalid email credentials" }).end();
-
     /// Password at least 6 digits.
     /// At least one lowercase
     /// At least one uppercase
     /// At least one special character from @ # $ % ^ & *
     const passwordRegex: RegExp = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-    if (!passwordRegex.test(req.body.password)) res.status(401).json({ "message": "invalid password credentials" }).end();
-    next();
+
+    if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
+        if (!emailRegex.test(req.body.email) && !passwordRegex.test(req.body.password)) {
+            res.status(401).json({ "message": "invalid credentials" }).end();
+        } else if (!passwordRegex.test(req.body.password)) {
+            res.status(401).json({ "message": "invalid password credentials" }).end();
+        } else if (!emailRegex.test(req.body.email)) {
+            res.status(401).json({ "message": "invalid password credentials" }).end();
+        } else {
+            res.status(401).json({ "message": "invalid credentials" }).end();
+        }
+    } else {
+        next();
+    }
+
 }
 
 
 export const validateLoginPassword = async (req: Request, res: Response, next: NextFunction) => {
     const requestPassword = req.body.password;
-    const newlyEncryptedPassword = await hashData(requestPassword);
-    const returnType = await Injector.db.get({ isUser: true, user: { email: req.body.email, password: newlyEncryptedPassword, name: req.body.name }, rent: null });
+
+    /// Only email is used by db to retrieve user
+    /// Other params exist to prevent missing params compilation error
+    const returnType = await Injector.db.get({ isUser: true, user: { email: req.body.email, password: requestPassword, name: req.body.name }, rent: null });
 
     if (returnType === null || returnType === undefined) {
         res.status(404).json({
             "message": "user not found"
         }).end();
+    } else {
+        try {
+            const { user } = returnType!;
+            const oldPassword = user!.password;
+            const newPassword = req.body.password;
+
+            const isMatch = await comparePasswords(newPassword, oldPassword);
+            if (isMatch === false) res.status(404).json({
+                "message": "invalid login credentials"
+            }).end();
+
+            next();
+        } catch (error) {
+            res.status(500).json({
+                "message": "server error"
+            }).end()
+        }
     }
 
-    try {
-        const { user } = returnType!;
-        const oldEncryptedPassword = user!.password;
-
-        if (!await comparePasswords(newlyEncryptedPassword, oldEncryptedPassword)) res.status(404).json({
-            "message": "invalid login credentials"
-        }).end();
-
-        next();
-    } catch (error) {
-        res.status(500).json({
-            "message": "server error"
-        }).end()
-    }
 }

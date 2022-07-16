@@ -14,8 +14,11 @@ export default class RentalServiceHandler {
     }
 
     async rentBook(req: Request, res: Response, next: NextFunction) {
-        const encryptedPassword = await encryptPassword(req);
+        const encryptedPassword = await hashData(req.body.password);
         const hash = await hashData(req.body.name);
+
+        // testing 
+        console.log("call of rent came here");
 
         try {
             const book = await this.dbService.get({
@@ -34,6 +37,9 @@ export default class RentalServiceHandler {
             });
 
             if (book === null || undefined) {
+                // testing
+                console.log("call entered null field");
+
                 this.dbService.create({
                     isUser: false,
                     rent: {
@@ -46,30 +52,34 @@ export default class RentalServiceHandler {
                     },
                     user: null,
                 });
+            } else if (book) {
+
+                this.dbService.update({
+                    isUser: false,
+                    rent: {
+                        name: req.body.name,
+                        hash: hash,
+                        isRented: true,
+                        rentedBy: encryptedPassword,
+                        startDate: req.body.startDate,
+                        endDate: req.body.endDate,
+                    },
+                    user: null
+                })
             }
 
-            this.dbService.update({
-                isUser: false,
-                rent: {
-                    name: req.body.name,
-                    hash: hash,
-                    isRented: true,
-                    rentedBy: encryptedPassword,
-                    startDate: req.body.startDate,
-                    endDate: req.body.endDate,
-                },
-                user: null
-            })
+            res.status(200).json({
+                message: "book rented ",
+            });
 
         } catch (error) {
+            console.log(error);
+
             res.status(500).json({
                 message: "server error",
             });
         }
 
-        res.status(200).json({
-            message: "book rented ",
-        });
     }
 
     async turnInBook(req: Request, res: Response) {

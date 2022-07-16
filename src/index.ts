@@ -10,7 +10,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-
+/// index of routes in Endpoints array defined in Routers/endpoints
 const signupIndex = 0;
 const loginIndex = 1;
 const getUserIndex = 2;

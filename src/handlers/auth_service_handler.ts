@@ -13,6 +13,7 @@ export default class AuthServiceHandler {
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
         // hash password with bycrypt and insert user data into db
         const encryptedPassword = await hashData(req.body.password);
+        console.log(encryptedPassword);
 
         const userData: UserParam = {
             email: req.body.email,

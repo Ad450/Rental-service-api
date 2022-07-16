@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, } from "express";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { scrypt, randomBytes } from "crypto";
 import { promisify } from "util";
+import bcrypt from "bcrypt";
 
 
 dotenv.config();
@@ -33,13 +34,8 @@ export const encryptData = async (req: Request): Promise<string> => {
 
 export const comparePasswords = async (input: string, existingPassword: string): Promise<boolean> => {
     try {
-        //const results = await bcrypt.compare(input, existingPassword);
-
-        // testing
-        if (input === existingPassword) {
-            return true
-        }
-        return false;
+        const results = await bcrypt.compare(input, existingPassword);
+        return results;
     } catch (error) {
         console.log(error);
         return false;
@@ -49,11 +45,10 @@ export const comparePasswords = async (input: string, existingPassword: string):
 
 export const hashData = async (input: string): Promise<string> => {
     try {
-        const salt = randomBytes(5).toString("hex");
-        const scryptAsync = promisify(scrypt);
-        const hash = (await scryptAsync(input, salt, 40)) as Buffer;
+        const hash = await bcrypt.hash(input, 4);
+        console.log(hash);
 
-        return hash.toString("hex");
+        return hash;
     } catch (error) {
         throw new Error("password comparison failed");
     }

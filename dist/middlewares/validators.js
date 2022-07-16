@@ -11,7 +11,7 @@ const injector_1 = __importDefault(require("../di/injector"));
 const validateToken = async (req, res, next) => {
     try {
         const headers = req.headers["authorization"];
-        if (!headers) {
+        if (headers === undefined) {
             res.status(401).json({
                 "message": "authorizatoin failed"
             }).end();
@@ -96,8 +96,8 @@ const validateLoginPassword = async (req, res, next) => {
     }
     try {
         const { user } = returnType;
-        const oldEncryptedPassword = user.password;
-        if (!await (0, helpers_1.comparePasswords)(newlyEncryptedPassword, oldEncryptedPassword))
+        const oldPassword = user.password;
+        if (!await (0, helpers_1.comparePasswords)(req.body.password, oldPassword))
             res.status(404).json({
                 "message": "invalid login credentials"
             }).end();

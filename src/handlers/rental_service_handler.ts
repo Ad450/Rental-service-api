@@ -78,19 +78,38 @@ export default class RentalServiceHandler {
         const hash = await hashData(req.body.name);
 
         try {
-            await this.dbService.update({
+            const existingBook = await this.dbService.get({
                 isUser: false,
                 rent: {
                     name: req.body.name,
                     hash: hash,
+                    /// params below are not necessary needed to retrieve book
                     isRented: false,
-                    rentedBy: "", /// clear up all data relating to previous user
-                    startDate: "",/// thereby all relating fields are set to empty string values
+                    rentedBy: "",
+                    startDate: "",
                     endDate: "",
                 },
                 user: null
             })
-            res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.bookHandedIn));
+
+            if (!existingBook) {
+                res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.bookNotFound)).end();
+            } else {
+                await this.dbService.update({
+                    isUser: false,
+                    rent: {
+                        name: req.body.name,
+                        hash: hash,
+                        isRented: false,
+                        rentedBy: "", /// clear up all data relating to previous user
+                        startDate: "",/// thereby all relating fields are set to empty string values
+                        endDate: "",
+                    },
+                    user: null
+                })
+                res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.bookHandedIn));
+
+            }
         } catch (error) {
             res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError));
         }

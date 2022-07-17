@@ -65,11 +65,12 @@ class RentalServiceHandler {
     async turnInBook(req, res) {
         const hash = await (0, helpers_1.hashData)(req.body.name);
         try {
-            await this.dbService.update({
+            const existingBook = await this.dbService.get({
                 isUser: false,
                 rent: {
                     name: req.body.name,
                     hash: hash,
+                    /// params below are not necessary needed to retrieve book
                     isRented: false,
                     rentedBy: "",
                     startDate: "",
@@ -77,7 +78,24 @@ class RentalServiceHandler {
                 },
                 user: null
             });
-            res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookHandedIn));
+            if (!existingBook) {
+                res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookNotFound)).end();
+            }
+            else {
+                await this.dbService.update({
+                    isUser: false,
+                    rent: {
+                        name: req.body.name,
+                        hash: hash,
+                        isRented: false,
+                        rentedBy: "",
+                        startDate: "",
+                        endDate: "",
+                    },
+                    user: null
+                });
+                res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookHandedIn));
+            }
         }
         catch (error) {
             res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));

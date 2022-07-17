@@ -86,8 +86,8 @@ class DatabaseServiceImpl extends db_service_1.default {
             return castResults;
         }
         else {
-            const { hash } = param.rent;
-            const existingBookDoc = await db_setup_1.BookModel.findOne({ hash: hash }).lean();
+            const { name } = param.rent;
+            const existingBookDoc = await db_setup_1.BookModel.findOne({ hash: name }).lean();
             if (existingBookDoc === undefined || existingBookDoc === null) {
                 return null;
             }

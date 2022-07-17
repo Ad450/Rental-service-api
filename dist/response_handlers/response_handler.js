@@ -21,6 +21,7 @@ ApiResponse._invalidAuthInput = "invalid credentials";
 ApiResponse._authorizationFailed = "authorization failed";
 ApiResponse._bookHandedIn = "book handed in";
 ApiResponse._bookRented = "book rented";
+ApiResponse._bookNotFound = "book not found";
 ApiResponse.responses = {
     userAlreadyExists: ApiResponse._userAlreadyExists,
     userNotFound: ApiResponse._userNotFound,
@@ -34,5 +35,6 @@ ApiResponse.responses = {
     invalidAuthInput: ApiResponse._invalidAuthInput,
     authorizationFailed: ApiResponse._authorizationFailed,
     bookHandedIn: ApiResponse._bookHandedIn,
-    bookRented: ApiResponse._bookRented
+    bookRented: ApiResponse._bookRented,
+    bookNotFound: ApiResponse._bookNotFound,
 };

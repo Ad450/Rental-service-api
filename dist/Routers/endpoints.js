@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.routers = void 0;
 const injector_1 = __importDefault(require("../di/injector"));
 const validators_1 = require("../middlewares/validators");
-const endpoints_interface_1 = require("./endpoints_interface");
+const endpoints_interface_1 = require("../interfaces/endpoints_interface");
 // Rentals
 const getAllBooks = "/getAllBooks";
 const getBook = "/getBook:id";

@@ -27,13 +27,8 @@ class DatabaseServiceImpl extends db_service_1.default {
         }
         else {
             const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent;
-            // testing ........
-            console.log(param.rent);
             const existingBook = await db_setup_1.BookModel.findOne({ name: name });
-            // testing......
-            console.log(existingBook);
             if (existingBook === null || existingBook === undefined) {
-                // testing ..........
                 const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
                 newBook.save();
                 return;
@@ -87,7 +82,7 @@ class DatabaseServiceImpl extends db_service_1.default {
         }
         else {
             const { name } = param.rent;
-            const existingBookDoc = await db_setup_1.BookModel.findOne({ hash: name }).lean();
+            const existingBookDoc = await db_setup_1.BookModel.findOne({ name: name }).lean();
             if (existingBookDoc === undefined || existingBookDoc === null) {
                 return null;
             }

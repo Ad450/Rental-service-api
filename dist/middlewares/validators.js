@@ -104,9 +104,12 @@ const validateLoginPassword = async (req, res, next) => {
             const oldPassword = user.password;
             const newPassword = req.body.password;
             const isMatch = await (0, helpers_1.comparePasswords)(newPassword, oldPassword);
-            if (isMatch === false)
+            if (isMatch === false) {
                 res.status(404).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidLogin)).end();
-            next();
+            }
+            else {
+                next();
+            }
         }
         catch (error) {
             res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError)).end();

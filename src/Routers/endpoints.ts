@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Injector from "../di/injector";
 import { refineAuthInput, validateAuthInput, validateLoginPassword, validateRentalInput, validateToken } from "../middlewares/validators";
-import EndpointsInterface, { routerMethods } from "./endpoints_interface";
+import EndpointsInterface, { routerMethods } from "../interfaces/endpoints_interface";
 
 // Rentals
 const getAllBooks: string = "/getAllBooks";

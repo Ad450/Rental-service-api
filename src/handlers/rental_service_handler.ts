@@ -5,6 +5,7 @@ import {
 } from "../core/helpers";
 import DatabaseService from "../db/db_service";
 import { DatabaseParam, BookFromDb } from "../interfaces/database_service_param";
+import ApiResponse from "../response_handlers/response_handler";
 
 export default class RentalServiceHandler {
     dbService: DatabaseService<DatabaseParam>;
@@ -17,9 +18,6 @@ export default class RentalServiceHandler {
         const encryptedPassword = await hashData(req.body.password);
         const hash = await hashData(req.body.name);
 
-        // testing 
-        console.log("call of rent came here");
-
         try {
             const book = await this.dbService.get({
                 isUser: false,
@@ -27,8 +25,8 @@ export default class RentalServiceHandler {
                 rent: {
                     name: req.body.name,
                     hash: hash,
-                    // params below are not needed to retrieve book
-                    // exist to escape missing params in type rent: RentalParams
+                    /// params below are not needed to retrieve book
+                    /// exist to escape missing params in type rent: RentalParams
                     isRented: true,
                     rentedBy: encryptedPassword,
                     startDate: req.body.startDate,
@@ -37,8 +35,6 @@ export default class RentalServiceHandler {
             });
 
             if (book === null || undefined) {
-                // testing
-                console.log("call entered null field");
 
                 this.dbService.create({
                     isUser: false,
@@ -68,16 +64,12 @@ export default class RentalServiceHandler {
                 })
             }
 
-            res.status(200).json({
-                message: "book rented ",
-            });
+            res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.bookRented)).end();
 
         } catch (error) {
             console.log(error);
 
-            res.status(500).json({
-                message: "server error",
-            });
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end();
         }
 
     }
@@ -86,7 +78,7 @@ export default class RentalServiceHandler {
         const hash = await hashData(req.body.name);
 
         try {
-            this.dbService.update({
+            await this.dbService.update({
                 isUser: false,
                 rent: {
                     name: req.body.name,
@@ -98,13 +90,9 @@ export default class RentalServiceHandler {
                 },
                 user: null
             })
-            res.status(200).json({
-                "message": "book handed in"
-            });
+            res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.bookHandedIn));
         } catch (error) {
-            res.status(500).json({
-                "message": "server error"
-            });
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError));
         }
     }
 
@@ -128,9 +116,7 @@ export default class RentalServiceHandler {
             });
 
             if (book === null || undefined) {
-                res.status(500).json({
-                    "message": "server error"
-                })
+                res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError))
             }
 
             const { rent } = book!;
@@ -147,9 +133,7 @@ export default class RentalServiceHandler {
             return bookFromDB;
 
         } catch (error) {
-            res.status(500).json({
-                "message": "server error"
-            });
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError));
             return null;
         }
     }

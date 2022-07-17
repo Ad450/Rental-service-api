@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { comparePasswords, encryptData, generateAccessToken, hashData } from "../core/helpers";
 import DatabaseService from "../db/db_service";
 import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
+import ApiResponse from "../response_handlers/response_handler";
 
 export default class AuthServiceHandler {
     dbService: DatabaseService<DatabaseParam>;
@@ -28,12 +29,7 @@ export default class AuthServiceHandler {
 
             res.status(200).set("content-type", "application/json").json(userData).end();
         } catch (error) {
-            // testing
-            console.log("error was caught");
-
-            res.status(404).json({
-                "message": "user already exists"
-            }).end();
+            res.status(404).json(ApiResponse.responseJson(ApiResponse.responses.userAlreadyExists)).end();
         }
 
     }
@@ -42,13 +38,9 @@ export default class AuthServiceHandler {
         try {
             const accessToken = generateAccessToken(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
-            res.status(200).json({
-                "message": "login succesful"
-            }).end();
+            res.status(200).json(ApiResponse.responseJson(ApiResponse.responses.loginSuccessful)).end();
         } catch (error) {
-            res.status(500).json({
-                "message": "server error"
-            }).end()
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end()
         }
     }
 }

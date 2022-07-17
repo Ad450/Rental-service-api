@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { comparePasswords, hashData } from "../core/helpers";
 import Injector from "../di/injector";
+import ApiResponse from "../response_handlers/response_handler";
 
 export type Auth = {
     isSignup: boolean;
@@ -18,9 +19,7 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
     try {
         const headers = req.headers["authorization"];
         if (headers === undefined) {
-            res.status(401).json({
-                "message": "authorizatoin failed"
-            }).end();
+            res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.authorizationFailed)).end();
         }
         /// the authorization header has two strings Bearer and the token 
         /// [1] returns the token
@@ -28,9 +27,7 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "");
         next();
     } catch (error) {
-        res.status(401).json({
-            "message": "authorizatoin failed"
-        }).end();
+        res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.authorizationFailed)).end();
     }
 }
 
@@ -47,9 +44,7 @@ export const validateRentalInput = async (req: Request, res: Response, next: Nex
 
         next();
     } catch (error) {
-        res.status(401).json({
-            "message": "invalid input data"
-        }).end();
+        res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidInputData)).end();
     }
 }
 
@@ -64,9 +59,7 @@ export const validateAuthInput = async (req: Request, res: Response, next: NextF
 
         next();
     } catch (error) {
-        res.status(401).json({
-            "message": "invalid auth input data"
-        }).end();
+        res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidAuthInput)).end();
     }
 }
 
@@ -86,13 +79,13 @@ export const refineAuthInput = async (req: Request, res: Response, next: NextFun
 
     if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
         if (!emailRegex.test(req.body.email) && !passwordRegex.test(req.body.password)) {
-            res.status(401).json({ "message": "invalid credentials" }).end();
+            res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidCredentials)).end();
         } else if (!passwordRegex.test(req.body.password)) {
-            res.status(401).json({ "message": "invalid password credentials" }).end();
+            res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidPassword)).end();
         } else if (!emailRegex.test(req.body.email)) {
-            res.status(401).json({ "message": "invalid password credentials" }).end();
+            res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidEmail)).end();
         } else {
-            res.status(401).json({ "message": "invalid credentials" }).end();
+            res.status(401).json(ApiResponse.responseJson(ApiResponse.responses.invalidCredentials)).end();
         }
     } else {
         next();
@@ -109,9 +102,7 @@ export const validateLoginPassword = async (req: Request, res: Response, next: N
     const returnType = await Injector.db.get({ isUser: true, user: { email: req.body.email, password: requestPassword, name: req.body.name }, rent: null });
 
     if (returnType === null || returnType === undefined) {
-        res.status(404).json({
-            "message": "user not found"
-        }).end();
+        res.status(404).json(ApiResponse.responseJson(ApiResponse.responses.userNotFound)).end();
     } else {
         try {
             const { user } = returnType!;
@@ -119,15 +110,11 @@ export const validateLoginPassword = async (req: Request, res: Response, next: N
             const newPassword = req.body.password;
 
             const isMatch = await comparePasswords(newPassword, oldPassword);
-            if (isMatch === false) res.status(404).json({
-                "message": "invalid login credentials"
-            }).end();
+            if (isMatch === false) res.status(404).json(ApiResponse.responseJson(ApiResponse.responses.invalidLogin)).end();
 
             next();
         } catch (error) {
-            res.status(500).json({
-                "message": "server error"
-            }).end()
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end()
         }
     }
 

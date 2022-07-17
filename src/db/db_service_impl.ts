@@ -28,31 +28,33 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             // testing ........
             console.log(param!.rent);
 
-            const existingBook = BookModel.findOne({ hash: hash });
+            const existingBook = await BookModel.findOne({ name: name });
             // testing......
-            console.log(existingBook.lean());
+            console.log(existingBook);
 
-            if (existingBook !== null || existingBook !== undefined) {
+            if (existingBook === null || existingBook === undefined) {
                 // testing ..........
+                const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
+                newBook.save();
+                return;
+            } else {
                 console.log("call entered existingBook !== null");
-
                 return;
             }
 
-            const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
-            newBook.save();
         }
 
     }
+
     async update(param: DatabaseParam): Promise<void> {
         const { isUser } = param;
 
         if (isUser) {
             const { email, password, name } = param.user!;
-            UserModel.updateOne({ email: email }, { password: password, name: name });
+            await UserModel.updateOne({ email: email }, { password: password, name: name });
         } else {
             const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent!;
-            BookModel.updateOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await BookModel.updateOne({ name: name }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
         }
     }
     async delete(param: DatabaseParam): Promise<void> {
@@ -60,10 +62,11 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
 
         if (isUser) {
             const { email, password, name } = param.user!;
-            UserModel.deleteOne({ email: email }, { password: password, name: name });
+            await UserModel.deleteOne({ email: email }, { password: password, name: name });
         } else {
+
             const { hash, isRented, rentedBy, startDate, endDate } = param.rent!;
-            BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
         }
     }
     async get(param: DatabaseParam): Promise<DbReturnType | null> {
@@ -110,6 +113,16 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
 
     }
     async getAll(param: DatabaseParam): Promise<Array<DbReturnType> | null> {
-        throw new Error("Method not implemented.");
+        /// functionality not implemented yet
+
+        try {
+            const { isUser } = param;
+            if (isUser) {
+                //
+            }
+            return [];
+        } catch (error) {
+            return [];
+        }
     }
 }

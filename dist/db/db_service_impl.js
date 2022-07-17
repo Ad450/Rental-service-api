@@ -29,38 +29,41 @@ class DatabaseServiceImpl extends db_service_1.default {
             const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent;
             // testing ........
             console.log(param.rent);
-            const existingBook = db_setup_1.BookModel.findOne({ hash: hash });
+            const existingBook = await db_setup_1.BookModel.findOne({ name: name });
             // testing......
-            console.log(existingBook.lean());
-            if (existingBook !== null || existingBook !== undefined) {
+            console.log(existingBook);
+            if (existingBook === null || existingBook === undefined) {
                 // testing ..........
+                const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
+                newBook.save();
+                return;
+            }
+            else {
                 console.log("call entered existingBook !== null");
                 return;
             }
-            const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
-            newBook.save();
         }
     }
     async update(param) {
         const { isUser } = param;
         if (isUser) {
             const { email, password, name } = param.user;
-            db_setup_1.UserModel.updateOne({ email: email }, { password: password, name: name });
+            await db_setup_1.UserModel.updateOne({ email: email }, { password: password, name: name });
         }
         else {
             const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent;
-            db_setup_1.BookModel.updateOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await db_setup_1.BookModel.updateOne({ name: name }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
         }
     }
     async delete(param) {
         const { isUser } = param;
         if (isUser) {
             const { email, password, name } = param.user;
-            db_setup_1.UserModel.deleteOne({ email: email }, { password: password, name: name });
+            await db_setup_1.UserModel.deleteOne({ email: email }, { password: password, name: name });
         }
         else {
             const { hash, isRented, rentedBy, startDate, endDate } = param.rent;
-            db_setup_1.BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await db_setup_1.BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
         }
     }
     async get(param) {
@@ -105,7 +108,17 @@ class DatabaseServiceImpl extends db_service_1.default {
         }
     }
     async getAll(param) {
-        throw new Error("Method not implemented.");
+        /// functionality not implemented yet
+        try {
+            const { isUser } = param;
+            if (isUser) {
+                //
+            }
+            return [];
+        }
+        catch (error) {
+            return [];
+        }
     }
 }
 exports.default = DatabaseServiceImpl;

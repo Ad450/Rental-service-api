@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("../core/helpers");
+const response_handler_1 = __importDefault(require("../response_handlers/response_handler"));
 class AuthServiceHandler {
     constructor(dbService) {
         this.dbService = dbService;
@@ -21,25 +25,17 @@ class AuthServiceHandler {
             res.status(200).set("content-type", "application/json").json(userData).end();
         }
         catch (error) {
-            // testing
-            console.log("error was caught");
-            res.status(404).json({
-                "message": "user already exists"
-            }).end();
+            res.status(404).json(response_handler_1.default.responseJson(response_handler_1.default.responses.userAlreadyExists)).end();
         }
     }
     async login(req, res, next) {
         try {
             const accessToken = (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
-            res.status(200).json({
-                "message": "login succesful"
-            }).end();
+            res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.loginSuccessful)).end();
         }
         catch (error) {
-            res.status(500).json({
-                "message": "server error"
-            }).end();
+            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError)).end();
         }
     }
 }

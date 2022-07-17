@@ -7,16 +7,10 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
         const { isUser } = param;
 
         if (isUser) {
-            // testing 
-            console.log("db call got here");
-
             const { email, password, name } = param.user!;
             const existingUser = await UserModel.findOne({ email: email });
             if (existingUser) {
-                // testing
-                console.log("user already existing");
                 throw new Error("user already existing");
-                //process.exit();
 
             } else {
                 const user = new UserModel({ email: email, password: password, name: name });
@@ -25,15 +19,9 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             }
         } else {
             const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent!;
-            // testing ........
-            console.log(param!.rent);
-
             const existingBook = await BookModel.findOne({ name: name });
-            // testing......
-            console.log(existingBook);
 
             if (existingBook === null || existingBook === undefined) {
-                // testing ..........
                 const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
                 newBook.save();
                 return;
@@ -41,7 +29,6 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
                 console.log("call entered existingBook !== null");
                 return;
             }
-
         }
 
     }
@@ -90,7 +77,7 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             return castResults;
         } else {
             const { name } = param.rent!;
-            const existingBookDoc = await BookModel.findOne({ hash: name }).lean();
+            const existingBookDoc = await BookModel.findOne({ name: name }).lean();
 
             if (existingBookDoc === undefined || existingBookDoc === null) {
                 return null;

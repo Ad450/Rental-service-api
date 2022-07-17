@@ -110,9 +110,12 @@ export const validateLoginPassword = async (req: Request, res: Response, next: N
             const newPassword = req.body.password;
 
             const isMatch = await comparePasswords(newPassword, oldPassword);
-            if (isMatch === false) res.status(404).json(ApiResponse.responseJson(ApiResponse.responses.invalidLogin)).end();
+            if (isMatch === false) {
+                res.status(404).json(ApiResponse.responseJson(ApiResponse.responses.invalidLogin)).end();
+            } else {
+                next();
+            }
 
-            next();
         } catch (error) {
             res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end();
         }

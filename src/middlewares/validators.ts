@@ -114,7 +114,7 @@ export const validateLoginPassword = async (req: Request, res: Response, next: N
 
             next();
         } catch (error) {
-            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end()
+            res.status(500).json(ApiResponse.responseJson(ApiResponse.responses.serverError)).end();
         }
     }
 

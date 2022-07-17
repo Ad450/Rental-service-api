@@ -89,8 +89,8 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             }
             return castResults;
         } else {
-            const { hash } = param.rent!;
-            const existingBookDoc = await BookModel.findOne({ hash: hash }).lean();
+            const { name } = param.rent!;
+            const existingBookDoc = await BookModel.findOne({ hash: name }).lean();
 
             if (existingBookDoc === undefined || existingBookDoc === null) {
                 return null;

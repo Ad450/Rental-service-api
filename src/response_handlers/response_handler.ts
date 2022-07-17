@@ -17,6 +17,7 @@ export default abstract class ApiResponse {
     protected static _authorizationFailed: string = "authorization failed";
     protected static _bookHandedIn: string = "book handed in";
     protected static _bookRented: string = "book rented";
+    protected static _bookNotFound: string = "book not found";
 
     static responses = {
         userAlreadyExists: ApiResponse._userAlreadyExists,
@@ -31,7 +32,8 @@ export default abstract class ApiResponse {
         invalidAuthInput: ApiResponse._invalidAuthInput,
         authorizationFailed: ApiResponse._authorizationFailed,
         bookHandedIn: ApiResponse._bookHandedIn,
-        bookRented: ApiResponse._bookRented
+        bookRented: ApiResponse._bookRented,
+        bookNotFound: ApiResponse._bookNotFound,
     }
 
     static responseJson(input: string): {} {

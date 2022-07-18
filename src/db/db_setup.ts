@@ -26,11 +26,11 @@ const bookSchema = new mongoose.Schema({
         required: true,
     },
     startDate: {
-        type: String,
+        type: String, // will be update to Date type
         required: false
     },
     endDate: {
-        type: String,
+        type: String, // will be update to Date type
         required: false
     },
     isRented: {

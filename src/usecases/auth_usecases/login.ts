@@ -19,7 +19,7 @@ export default class Login implements BaseUsecase<UsecaseParam>{
             next: next
         }
         try {
-            this.authService.login(serviceParams);
+            return this.authService.login(serviceParams);
         } catch (error) {
             console.warn(error);
         }

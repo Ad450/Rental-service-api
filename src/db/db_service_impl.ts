@@ -1,8 +1,13 @@
-import { BookFromDb, DatabaseParam, DbReturnType, UserFromDb } from "../interfaces/database_service_param";
+import {
+    BookFromDb,
+    DatabaseParam,
+    DbReturnType,
+    UserFromDb,
+} from "../interfaces/database_service_param";
 import DatabaseService from "./db_service";
 import { BookModel, UserModel } from "./db_setup";
 
-export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
+export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam> {
     async create(param: DatabaseParam): Promise<void> {
         const { isUser } = param;
 
@@ -11,18 +16,29 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             const existingUser = await UserModel.findOne({ email: email });
             if (existingUser) {
                 throw new Error("user already existing");
-
             } else {
-                const user = new UserModel({ email: email, password: password, name: name });
+                const user = new UserModel({
+                    email: email,
+                    password: password,
+                    name: name,
+                });
                 await user.save();
                 return;
             }
         } else {
-            const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent!;
+            const { name, hash, isRented, startDate, endDate, rentedBy } =
+                param.rent!;
             const existingBook = await BookModel.findOne({ name: name });
 
             if (existingBook === null || existingBook === undefined) {
-                const newBook = new BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
+                const newBook = new BookModel({
+                    name: name,
+                    hash: hash,
+                    isRented: isRented,
+                    startDate: startDate,
+                    endDate: endDate,
+                    rentedBy: rentedBy,
+                });
                 newBook.save();
                 return;
             } else {
@@ -30,7 +46,6 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
                 return;
             }
         }
-
     }
 
     async update(param: DatabaseParam): Promise<void> {
@@ -38,10 +53,22 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
 
         if (isUser) {
             const { email, password, name } = param.user!;
-            await UserModel.updateOne({ email: email }, { password: password, name: name });
+            await UserModel.updateOne(
+                { email: email },
+                { password: password, name: name }
+            );
         } else {
-            const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent!;
-            await BookModel.updateOne({ name: name }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            const { hash, name, isRented, rentedBy, startDate, endDate } =
+                param.rent!;
+            await BookModel.updateOne(
+                { name: name },
+                {
+                    isRented: isRented,
+                    rentedBy: rentedBy,
+                    startDate: startDate,
+                    endDate: endDate,
+                }
+            );
         }
     }
     async delete(param: DatabaseParam): Promise<void> {
@@ -49,11 +76,21 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
 
         if (isUser) {
             const { email, password, name } = param.user!;
-            await UserModel.deleteOne({ email: email }, { password: password, name: name });
+            await UserModel.deleteOne(
+                { email: email },
+                { password: password, name: name }
+            );
         } else {
-
             const { hash, isRented, rentedBy, startDate, endDate } = param.rent!;
-            await BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await BookModel.deleteOne(
+                { hash: hash },
+                {
+                    isRented: isRented,
+                    rentedBy: rentedBy,
+                    startDate: startDate,
+                    endDate: endDate,
+                }
+            );
         }
     }
     async get(param: DatabaseParam): Promise<DbReturnType | null> {
@@ -67,13 +104,13 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
             const _user: UserFromDb = {
                 id: existingUserDoc!._id,
                 email: existingUserDoc!.email,
-                password: existingUserDoc!.password
-            }
+                password: existingUserDoc!.password,
+            };
 
             const castResults: DbReturnType = {
                 user: _user,
-                rent: null
-            }
+                rent: null,
+            };
             return castResults;
         } else {
             const { name } = param.rent!;
@@ -90,14 +127,13 @@ export default class DatabaseServiceImpl extends DatabaseService<DatabaseParam>{
                 endDate: existingBookDoc!.endDate,
                 rentedBy: existingBookDoc!.rentedBy,
                 isRented: existingBookDoc!.isRented,
-            }
+            };
             const castResults: DbReturnType = {
                 user: null,
-                rent: _rent
-            }
+                rent: _rent,
+            };
             return castResults;
         }
-
     }
     async getAll(param: DatabaseParam): Promise<Array<DbReturnType> | null> {
         /// functionality not implemented yet

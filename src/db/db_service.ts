@@ -8,3 +8,5 @@ export default abstract class DatabaseService<DatabaseParam> {
     abstract getAll(param: DatabaseParam): Promise<Array<DbReturnType> | null>;
 }
 
+
+

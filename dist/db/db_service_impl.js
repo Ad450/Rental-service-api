@@ -9,18 +9,17 @@ class DatabaseServiceImpl extends db_service_1.default {
     async create(param) {
         const { isUser } = param;
         if (isUser) {
-            // testing 
-            console.log("db call got here");
             const { email, password, name } = param.user;
             const existingUser = await db_setup_1.UserModel.findOne({ email: email });
             if (existingUser) {
-                // testing
-                console.log("user already existing");
                 throw new Error("user already existing");
-                //process.exit();
             }
             else {
-                const user = new db_setup_1.UserModel({ email: email, password: password, name: name });
+                const user = new db_setup_1.UserModel({
+                    email: email,
+                    password: password,
+                    name: name,
+                });
                 await user.save();
                 return;
             }
@@ -29,7 +28,14 @@ class DatabaseServiceImpl extends db_service_1.default {
             const { name, hash, isRented, startDate, endDate, rentedBy } = param.rent;
             const existingBook = await db_setup_1.BookModel.findOne({ name: name });
             if (existingBook === null || existingBook === undefined) {
-                const newBook = new db_setup_1.BookModel({ name: name, hash: hash, isRented: isRented, startDate: startDate, endDate: endDate, rentedBy: rentedBy });
+                const newBook = new db_setup_1.BookModel({
+                    name: name,
+                    hash: hash,
+                    isRented: isRented,
+                    startDate: startDate,
+                    endDate: endDate,
+                    rentedBy: rentedBy,
+                });
                 newBook.save();
                 return;
             }
@@ -47,7 +53,12 @@ class DatabaseServiceImpl extends db_service_1.default {
         }
         else {
             const { hash, name, isRented, rentedBy, startDate, endDate } = param.rent;
-            await db_setup_1.BookModel.updateOne({ name: name }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await db_setup_1.BookModel.updateOne({ name: name }, {
+                isRented: isRented,
+                rentedBy: rentedBy,
+                startDate: startDate,
+                endDate: endDate,
+            });
         }
     }
     async delete(param) {
@@ -58,7 +69,12 @@ class DatabaseServiceImpl extends db_service_1.default {
         }
         else {
             const { hash, isRented, rentedBy, startDate, endDate } = param.rent;
-            await db_setup_1.BookModel.deleteOne({ hash: hash }, { isRented: isRented, rentedBy: rentedBy, startDate: startDate, endDate: endDate });
+            await db_setup_1.BookModel.deleteOne({ hash: hash }, {
+                isRented: isRented,
+                rentedBy: rentedBy,
+                startDate: startDate,
+                endDate: endDate,
+            });
         }
     }
     async get(param) {
@@ -72,11 +88,11 @@ class DatabaseServiceImpl extends db_service_1.default {
             const _user = {
                 id: existingUserDoc._id,
                 email: existingUserDoc.email,
-                password: existingUserDoc.password
+                password: existingUserDoc.password,
             };
             const castResults = {
                 user: _user,
-                rent: null
+                rent: null,
             };
             return castResults;
         }
@@ -97,7 +113,7 @@ class DatabaseServiceImpl extends db_service_1.default {
             };
             const castResults = {
                 user: null,
-                rent: _rent
+                rent: _rent,
             };
             return castResults;
         }

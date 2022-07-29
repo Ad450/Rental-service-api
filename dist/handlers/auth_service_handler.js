@@ -19,23 +19,24 @@ class AuthServiceHandler {
             name: req.body.email,
         };
         try {
-            await this.dbService.create({ user: userData, rent: null, isUser: true });
+            await this.dbService.create({
+                name: req.body.email,
+                email: encryptedPassword,
+                password: req.body.email,
+            });
             const accessToken = await (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
-            res.status(200).set("content-type", "application/json").json(userData).end();
+            res
+                .status(200)
+                .set("content-type", "application/json")
+                .json(userData)
+                .end();
         }
         catch (error) {
-            res.status(404).json(response_handler_1.default.responseJson(response_handler_1.default.responses.userAlreadyExists)).end();
-        }
-    }
-    async login(req, res, next) {
-        try {
-            const accessToken = (0, helpers_1.generateAccessToken)(req);
-            res.setHeader("authorization", `Bearer ${accessToken}`);
-            res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.loginSuccessful)).end();
-        }
-        catch (error) {
-            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError)).end();
+            res
+                .status(404)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.userAlreadyExists))
+                .end();
         }
     }
 }

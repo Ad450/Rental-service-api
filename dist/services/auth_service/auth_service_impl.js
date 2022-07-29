@@ -7,7 +7,7 @@ class AuthServiceImpl {
     async login(param) {
         const { req, res, next } = param;
         try {
-            await this.authServiceHandler.login(req, res, next);
+            // await this.authServiceHandler.login(req, res, next);
         }
         catch (error) {
             // will introduce Logger soon!

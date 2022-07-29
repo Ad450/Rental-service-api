@@ -13,16 +13,22 @@ const validateToken = async (req, res, next) => {
     try {
         const headers = req.headers["authorization"];
         if (headers === undefined) {
-            res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.authorizationFailed)).end();
+            res
+                .status(401)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.authorizationFailed))
+                .end();
         }
-        /// the authorization header has two strings Bearer and the token 
+        /// the authorization header has two strings Bearer and the token
         /// [1] returns the token
         const token = headers.split(" ")[1];
         jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET || "");
         next();
     }
     catch (error) {
-        res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.authorizationFailed)).end();
+        res
+            .status(401)
+            .json(response_handler_1.default.responseJson(response_handler_1.default.responses.authorizationFailed))
+            .end();
     }
 };
 exports.validateToken = validateToken;
@@ -39,7 +45,10 @@ const validateRentalInput = async (req, res, next) => {
         next();
     }
     catch (error) {
-        res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidInputData)).end();
+        res
+            .status(401)
+            .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidInputData))
+            .end();
     }
 };
 exports.validateRentalInput = validateRentalInput;
@@ -54,7 +63,10 @@ const validateAuthInput = async (req, res, next) => {
         next();
     }
     catch (error) {
-        res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidAuthInput)).end();
+        res
+            .status(401)
+            .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidAuthInput))
+            .end();
     }
 };
 exports.validateAuthInput = validateAuthInput;
@@ -71,18 +83,32 @@ const refineAuthInput = async (req, res, next) => {
     /// At least one uppercase
     /// At least one special character from @ # $ % ^ & *
     const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-    if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
-        if (!emailRegex.test(req.body.email) && !passwordRegex.test(req.body.password)) {
-            res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidCredentials)).end();
+    if (!emailRegex.test(req.body.email) ||
+        !passwordRegex.test(req.body.password)) {
+        if (!emailRegex.test(req.body.email) &&
+            !passwordRegex.test(req.body.password)) {
+            res
+                .status(401)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidCredentials))
+                .end();
         }
         else if (!passwordRegex.test(req.body.password)) {
-            res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidPassword)).end();
+            res
+                .status(401)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidPassword))
+                .end();
         }
         else if (!emailRegex.test(req.body.email)) {
-            res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidEmail)).end();
+            res
+                .status(401)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidEmail))
+                .end();
         }
         else {
-            res.status(401).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidCredentials)).end();
+            res
+                .status(401)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidCredentials))
+                .end();
         }
     }
     else {
@@ -94,9 +120,20 @@ const validateLoginPassword = async (req, res, next) => {
     const requestPassword = req.body.password;
     /// Only email is used by db to retrieve user
     /// Other params exist to prevent missing params compilation error
-    const returnType = await injector_1.default.db.get({ isUser: true, user: { email: req.body.email, password: requestPassword, name: req.body.name }, rent: null });
+    const returnType = await injector_1.default.db.get({
+        isUser: true,
+        user: {
+            email: req.body.email,
+            password: requestPassword,
+            name: req.body.name,
+        },
+        rent: null,
+    });
     if (returnType === null || returnType === undefined) {
-        res.status(404).json(response_handler_1.default.responseJson(response_handler_1.default.responses.userNotFound)).end();
+        res
+            .status(404)
+            .json(response_handler_1.default.responseJson(response_handler_1.default.responses.userNotFound))
+            .end();
     }
     else {
         try {
@@ -105,14 +142,20 @@ const validateLoginPassword = async (req, res, next) => {
             const newPassword = req.body.password;
             const isMatch = await (0, helpers_1.comparePasswords)(newPassword, oldPassword);
             if (isMatch === false) {
-                res.status(404).json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidLogin)).end();
+                res
+                    .status(404)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidLogin))
+                    .end();
             }
             else {
                 next();
             }
         }
         catch (error) {
-            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError)).end();
+            res
+                .status(500)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                .end();
         }
     }
 };

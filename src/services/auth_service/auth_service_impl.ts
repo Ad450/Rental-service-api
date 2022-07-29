@@ -13,7 +13,7 @@ export default class AuthServiceImpl implements AuthService<AuthServiceParam>{
     async login(param: AuthServiceParam): Promise<void> {
         const { req, res, next } = param;
         try {
-            await this.authServiceHandler.login(req, res, next);
+            // await this.authServiceHandler.login(req, res, next);
         } catch (error) {
             // will introduce Logger soon!
             console.log(error);

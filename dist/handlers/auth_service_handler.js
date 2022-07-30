@@ -45,5 +45,21 @@ class AuthServiceHandler {
                 .end();
         }
     }
+    async login(req, res, next) {
+        try {
+            const accessToken = (0, helpers_1.generateAccessToken)(req);
+            res.setHeader("authorization", `Bearer ${accessToken}`);
+            res
+                .status(200)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.loginSuccessful))
+                .end();
+        }
+        catch (error) {
+            res
+                .status(500)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                .end();
+        }
+    }
 }
 exports.default = AuthServiceHandler;

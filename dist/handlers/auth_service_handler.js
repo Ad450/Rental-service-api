@@ -20,9 +20,13 @@ class AuthServiceHandler {
         };
         try {
             await this.dbService.create({
-                name: req.body.email,
-                email: encryptedPassword,
-                password: req.body.email,
+                isUser: true,
+                rent: null,
+                user: {
+                    email: req.body.email,
+                    password: encryptedPassword,
+                    name: req.body.email,
+                },
             });
             const accessToken = await (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
@@ -33,6 +37,8 @@ class AuthServiceHandler {
                 .end();
         }
         catch (error) {
+            // testing
+            console.log(error);
             res
                 .status(404)
                 .json(response_handler_1.default.responseJson(response_handler_1.default.responses.userAlreadyExists))

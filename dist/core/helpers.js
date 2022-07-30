@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hashData = exports.comparePasswords = exports.encryptData = exports.generateAccessToken = void 0;
+exports.typeGuard = exports.hashData = exports.comparePasswords = exports.encryptData = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv = __importStar(require("dotenv"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -68,7 +68,6 @@ exports.comparePasswords = comparePasswords;
 const hashData = async (input) => {
     try {
         const hash = await bcrypt_1.default.hash(input, 4);
-        console.log(hash);
         return hash;
     }
     catch (error) {
@@ -76,3 +75,7 @@ const hashData = async (input) => {
     }
 };
 exports.hashData = hashData;
+function typeGuard({ param, typeArray }) {
+    return typeArray.indexOf(param) === -1;
+}
+exports.typeGuard = typeGuard;

@@ -4,8 +4,7 @@ import { AuthServiceParam } from "../../../src/interfaces/auth_service_param";
 import { mock, instance, when, verify } from 'ts-mockito';
 import Login from "../../../src/usecases/auth_usecases/login";
 import { Request, NextFunction, Response } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
+
 
 
 describe("Login Test", () => {

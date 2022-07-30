@@ -11,6 +11,7 @@
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "test": "mocha -r ts-node/register test/**/*.ts"
   },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ad450/Rental-service-api.git"

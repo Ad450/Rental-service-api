@@ -13,36 +13,35 @@ import GetAllBooks from "../usecases/rental_usecases/get_all_books";
 import GetBook from "../usecases/rental_usecases/get_all_books";
 import RentBook from "../usecases/rental_usecases/rent_book";
 import TurnInBook from "../usecases/rental_usecases/turn_in_book";
-import TrialDatabaseImpl from "../db/TrialDatabaseImpl";
 
 export default abstract class Injector {
-    /// usecases
+  /// usecases
 
-    static login = new Login(
-        new AuthServiceImpl(new AuthServiceHandler(new TrialDatabaseImpl()))
-    );
-    static signup = new Signup(
-        new AuthServiceImpl(new AuthServiceHandler(new TrialDatabaseImpl()))
-    );
-    static getUser = new GetUser(
-        new AuthServiceImpl(new AuthServiceHandler(new TrialDatabaseImpl()))
-    );
-    static getAllUsers = new GetAllUsers(
-        new AuthServiceImpl(new AuthServiceHandler(new TrialDatabaseImpl()))
-    );
-    static getBook = new GetBook(
-        new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
-    );
-    static getAllBooks = new GetAllBooks(
-        new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
-    );
-    static rentBook = new RentBook(
-        new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
-    );
-    static turnInBook = new TurnInBook(
-        new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
-    );
+  static login = new Login(
+    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+  );
+  static signup = new Signup(
+    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+  );
+  static getUser = new GetUser(
+    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+  );
+  static getAllUsers = new GetAllUsers(
+    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+  );
+  static getBook = new GetBook(
+    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+  );
+  static getAllBooks = new GetAllBooks(
+    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+  );
+  static rentBook = new RentBook(
+    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+  );
+  static turnInBook = new TurnInBook(
+    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+  );
 
-    /// database
-    static db = new DatabaseServiceImpl();
+  /// database
+  static db = new DatabaseServiceImpl();
 }

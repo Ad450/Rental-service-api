@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": ["node", "mocha"],
+    "types": ["node",],
     "typeRoots": [ "./node_modules/@types" ]
   },
   "include": ["src"],

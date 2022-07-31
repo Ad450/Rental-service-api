@@ -4,26 +4,24 @@ import { AuthServiceParam } from "../../interfaces/auth_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
 import AuthService from "../../services/auth_service/auth_service";
 
-
 export default class GetAllUsers implements BaseUsecase<UsecaseParam> {
-    authService: AuthService<AuthServiceParam>;
+  authService: AuthService<AuthServiceParam>;
 
-    constructor(authService: AuthService<AuthServiceParam>) {
-        this.authService = authService;
+  constructor(authService: AuthService<AuthServiceParam>) {
+    this.authService = authService;
+  }
+
+  async call(param: UsecaseParam): Promise<void> {
+    const { req, res, next } = param;
+    const serviceParams: AuthServiceParam = {
+      req: req,
+      res: res,
+      next: next,
+    };
+    try {
+      this.authService.getAllUsers(serviceParams);
+    } catch (error) {
+      console.warn(error);
     }
-
-    async call(param: UsecaseParam): Promise<void> {
-        const { req, res, next } = param;
-        const serviceParams: AuthServiceParam = {
-            req: req,
-            res: res,
-            next: next
-        }
-        try {
-            this.authService.getAllUsers(serviceParams);
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-
+  }
 }

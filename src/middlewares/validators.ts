@@ -21,7 +21,7 @@ export const validateToken = async (
 ): Promise<void> => {
   try {
     const headers = req.headers["authorization"];
-    if (headers === undefined) {
+    if (headers === undefined || null) {
       res
         .status(401)
         .json(
@@ -176,7 +176,7 @@ export const validateLoginPassword = async (
       const newPassword = req.body.password;
 
       const isMatch = await comparePasswords(newPassword, oldPassword);
-      if (isMatch === false) {
+      if (!isMatch) {
         res
           .status(404)
           .json(ApiResponse.responseJson(ApiResponse.responses.invalidLogin))

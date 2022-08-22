@@ -12,7 +12,7 @@ const response_handler_1 = __importDefault(require("../response_handlers/respons
 const validateToken = async (req, res, next) => {
     try {
         const headers = req.headers["authorization"];
-        if (headers === undefined) {
+        if (headers === undefined || null) {
             res
                 .status(401)
                 .json(response_handler_1.default.responseJson(response_handler_1.default.responses.authorizationFailed))
@@ -141,7 +141,7 @@ const validateLoginPassword = async (req, res, next) => {
             const oldPassword = user.password;
             const newPassword = req.body.password;
             const isMatch = await (0, helpers_1.comparePasswords)(newPassword, oldPassword);
-            if (isMatch === false) {
+            if (!isMatch) {
                 res
                     .status(404)
                     .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidLogin))

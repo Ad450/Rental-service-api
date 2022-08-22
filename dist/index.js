@@ -62,5 +62,5 @@ const startApp = async () => {
         console.log(error);
     }
 };
-/// execution starts here 
+/// Program execution starts here
 startApp();

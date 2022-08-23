@@ -14,4 +14,4 @@ COPY . .
 
 CMD [ "node", "dist/index.js" ]
 
-EXPOSE 8080
+EXPOSE 3000

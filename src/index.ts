@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
 import { routers } from "./Routers/endpoints";
 import { connectMongoose } from "./db/db_setup";
+import { connectPrisma } from "./db/prisma_db_setup";
 
 dotenv.config();
 
@@ -68,7 +69,7 @@ const startApp = async () => {
         "sever started on port " + process.env.SERVER_PORT + ", more fire"
       );
     });
-    await connectMongoose();
+    await connectPrisma();
   } catch (error) {
     console.log(error);
   }

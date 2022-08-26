@@ -1,12 +1,12 @@
 import { Book, PrismaClient, User } from "@prisma/client";
 
-type UserType = {
+export type UserType = {
   name: string;
   email: string;
   password: string;
 };
 
-type BookType = {
+export type BookType = {
   name: string;
   hash: string;
   startDate: string | null;

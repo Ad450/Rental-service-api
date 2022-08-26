@@ -20,30 +20,46 @@ export default abstract class Injector {
   /// usecases
 
   static login = new Login(
-    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+    new AuthServiceImpl(
+      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+    )
   );
   static signup = new Signup(
-    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+    new AuthServiceImpl(
+      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+    )
   );
   static getUser = new GetUser(
-    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+    new AuthServiceImpl(
+      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+    )
   );
   static getAllUsers = new GetAllUsers(
-    new AuthServiceImpl(new AuthServiceHandler(new DatabaseServiceImpl()))
+    new AuthServiceImpl(
+      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+    )
   );
   static getBook = new GetBook(
-    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+    new RentalServiceImpl(
+      new RentalServiceHandler(new BookDatabase(new PrismaClient()))
+    )
   );
   static getAllBooks = new GetAllBooks(
-    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+    new RentalServiceImpl(
+      new RentalServiceHandler(new BookDatabase(new PrismaClient()))
+    )
   );
   static rentBook = new RentBook(
-    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+    new RentalServiceImpl(
+      new RentalServiceHandler(new BookDatabase(new PrismaClient()))
+    )
   );
   static turnInBook = new TurnInBook(
-    new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
+    new RentalServiceImpl(
+      new RentalServiceHandler(new BookDatabase(new PrismaClient()))
+    )
   );
-  static userDatabase = new UserDatabase(new PrismaClient());
-  static bookDatabase = new BookDatabase(new PrismaClient());
-  static db = new DatabaseServiceImpl();
+  // static userDatabase = new UserDatabase(new PrismaClient());
+  // static bookDatabase = new BookDatabase(new PrismaClient());
+  // static db = new DatabaseServiceImpl();
 }

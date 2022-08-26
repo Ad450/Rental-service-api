@@ -65,7 +65,7 @@ const comparePasswords = async (input, existingPassword) => {
     }
 };
 exports.comparePasswords = comparePasswords;
-const hashData = async (input) => {
+const hashData = async (input, nonce) => {
     try {
         const hash = await bcrypt_1.default.hash(input, 4);
         return hash;

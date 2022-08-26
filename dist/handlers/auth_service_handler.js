@@ -5,14 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("../core/helpers");
 const response_handler_1 = __importDefault(require("../response_handlers/response_handler"));
-const injector_1 = __importDefault(require("../di/injector"));
 class AuthServiceHandler {
-    constructor(dbService) {
-        this.dbService = dbService;
+    constructor(userDatabase) {
+        this.userDatabase = userDatabase;
     }
     async signup(req, res, next) {
         // hash password with bycrypt and insert user data into db
-        const encryptedPassword = await (0, helpers_1.hashData)(req.body.password);
+        const encryptedPassword = await (0, helpers_1.hashData)(req.body.name, req.body.password);
         const userData = {
             email: req.body.email,
             password: encryptedPassword,
@@ -21,7 +20,7 @@ class AuthServiceHandler {
         try {
             const { email, password, name } = userData;
             console.log(email);
-            await injector_1.default.userDatabase.create({
+            await this.userDatabase.create({
                 email: email,
                 password: password,
                 name: name,

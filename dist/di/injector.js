@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_service_impl_1 = __importDefault(require("../db/db_service_impl"));
 const auth_service_handler_1 = __importDefault(require("../handlers/auth_service_handler"));
 const rental_service_handler_1 = __importDefault(require("../handlers/rental_service_handler"));
 const auth_service_impl_1 = __importDefault(require("../services/auth_service/auth_service_impl"));
@@ -22,14 +21,13 @@ class Injector {
 }
 exports.default = Injector;
 /// usecases
-Injector.login = new login_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
-Injector.signup = new signup_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
-Injector.getUser = new get_user_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
-Injector.getAllUsers = new get_all_users_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new db_service_impl_1.default())));
-Injector.getBook = new get_all_books_2.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
-Injector.getAllBooks = new get_all_books_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
-Injector.rentBook = new rent_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
-Injector.turnInBook = new turn_in_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
+Injector.login = new login_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
+Injector.signup = new signup_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
+Injector.getUser = new get_user_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
+Injector.getAllUsers = new get_all_users_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
+Injector.getBook = new get_all_books_2.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
+Injector.getAllBooks = new get_all_books_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
+Injector.rentBook = new rent_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
+Injector.turnInBook = new turn_in_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
 Injector.userDatabase = new prisma_db_1.UserDatabase(new client_1.PrismaClient());
-/// database
-Injector.db = new db_service_impl_1.default();
+Injector.bookDatabase = new prisma_db_1.BookDatabase(new client_1.PrismaClient());

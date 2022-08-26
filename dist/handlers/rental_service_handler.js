@@ -6,136 +6,123 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("../core/helpers");
 const response_handler_1 = __importDefault(require("../response_handlers/response_handler"));
 class RentalServiceHandler {
-    constructor(dbService) {
-        this.dbService = dbService;
+    constructor(bookDatabase) {
+        this.bookDatabase = bookDatabase;
     }
     async rentBook(req, res, next) {
-        const encryptedPassword = await (0, helpers_1.hashData)(req.body.password);
-        const hash = await (0, helpers_1.hashData)(req.body.name);
+        const encryptedPassword = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
+        const hash = await (0, helpers_1.hashData)(req.body.name, req.body.name);
         try {
-            const book = await this.dbService.get({
-                isUser: false,
-                user: null,
-                rent: {
+            const book = await this.bookDatabase.retrieveOne({
+                name: req.body.name,
+                hash: hash,
+                /// params below are not needed to retrieve book
+                /// exist to escape missing params in type rent: RentalParams
+                rented: true,
+                rentedBy: encryptedPassword,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
+            });
+            if (book === null || undefined) {
+                this.bookDatabase.create({
                     name: req.body.name,
                     hash: hash,
-                    /// params below are not needed to retrieve book
-                    /// exist to escape missing params in type rent: RentalParams
-                    isRented: true,
+                    rented: true,
                     rentedBy: encryptedPassword,
                     startDate: req.body.startDate,
                     endDate: req.body.endDate,
-                },
-            });
-            if (book === null || undefined) {
-                this.dbService.create({
-                    isUser: false,
-                    rent: {
-                        name: req.body.name,
-                        hash: hash,
-                        isRented: true,
-                        rentedBy: encryptedPassword,
-                        startDate: req.body.startDate,
-                        endDate: req.body.endDate,
-                    },
-                    user: null,
                 });
             }
             else if (book) {
-                this.dbService.update({
-                    isUser: false,
-                    rent: {
-                        name: req.body.name,
-                        hash: hash,
-                        isRented: true,
-                        rentedBy: encryptedPassword,
-                        startDate: req.body.startDate,
-                        endDate: req.body.endDate,
-                    },
-                    user: null
+                this.bookDatabase.update({
+                    name: req.body.name,
+                    hash: hash,
+                    rented: true,
+                    rentedBy: encryptedPassword,
+                    startDate: req.body.startDate,
+                    endDate: req.body.endDate,
                 });
             }
-            res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookRented)).end();
+            res
+                .status(200)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookRented))
+                .end();
         }
         catch (error) {
             console.log(error);
-            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError)).end();
+            res
+                .status(500)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                .end();
         }
     }
     async turnInBook(req, res) {
-        const hash = await (0, helpers_1.hashData)(req.body.name);
+        const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const existingBook = await this.dbService.get({
-                isUser: false,
-                rent: {
+            const book = await this.bookDatabase.retrieveOne({
+                name: req.body.name,
+                hash: hash,
+                /// params below are not necessary needed to retrieve book
+                rented: false,
+                rentedBy: "",
+                startDate: "",
+                endDate: "",
+            });
+            if (!book) {
+                res
+                    .status(200)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookNotFound))
+                    .end();
+            }
+            else {
+                await this.bookDatabase.update({
                     name: req.body.name,
                     hash: hash,
-                    /// params below are not necessary needed to retrieve book
-                    isRented: false,
+                    rented: false,
                     rentedBy: "",
                     startDate: "",
                     endDate: "",
-                },
-                user: null
-            });
-            if (!existingBook) {
-                res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookNotFound)).end();
-            }
-            else {
-                await this.dbService.update({
-                    isUser: false,
-                    rent: {
-                        name: req.body.name,
-                        hash: hash,
-                        isRented: false,
-                        rentedBy: "",
-                        startDate: "",
-                        endDate: "",
-                    },
-                    user: null
                 });
-                res.status(200).json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookHandedIn));
+                res
+                    .status(200)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.bookHandedIn));
             }
         }
         catch (error) {
-            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
+            res
+                .status(500)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
         }
     }
     async getBook(req, res) {
         const encryptedPassword = await (0, helpers_1.encryptData)(req);
-        const hash = await (0, helpers_1.hashData)(req.body.name);
+        const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.dbService.get({
-                isUser: false,
-                user: null,
-                rent: {
-                    name: req.body.name,
-                    hash: hash,
-                    // params below are not needed to retrieve book
-                    // exist to escape missing params in type rent: RentalParams
-                    isRented: true,
-                    rentedBy: encryptedPassword,
-                    startDate: req.body.startDate,
-                    endDate: req.body.endDate,
-                },
+            const book = await this.bookDatabase.retrieveOne({
+                name: req.body.name,
+                hash: hash,
+                // params below not needed to retrieve book
+                rented: false,
+                rentedBy: encryptedPassword,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
             });
             if (book === null || undefined) {
-                res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
+                res
+                    .status(500)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                    .end();
+                return null;
             }
-            const { rent } = book;
-            const bookFromDB = {
-                id: rent.id,
-                name: rent.name,
-                hash: rent.hash,
-                isRented: rent.isRented,
-                rentedBy: rent.rentedBy,
-                startDate: rent.startDate,
-                endDate: rent.endDate
-            };
-            return bookFromDB;
+            else {
+                res.status(200).json(JSON.stringify(book)).end();
+                return book;
+            }
         }
         catch (error) {
-            res.status(500).json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
+            res
+                .status(500)
+                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
             return null;
         }
     }

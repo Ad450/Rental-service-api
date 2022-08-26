@@ -54,7 +54,7 @@ app.post(endpoints_1.routers[getAllBooksIndex].route, endpoints_1.routers[getAll
 const startApp = async () => {
     try {
         app.listen(process.env.SERVER_PORT || 3000, () => {
-            console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
+            console.log("server started on port " + process.env.SERVER_PORT + ", more fire");
         });
         await (0, prisma_db_setup_1.connectPrisma)();
     }

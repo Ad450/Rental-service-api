@@ -21,7 +21,7 @@ const validateToken = async (req, res, next) => {
         /// the authorization header has two strings Bearer and the token
         /// [1] returns the token
         const token = headers.split(" ")[1];
-        jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET || "");
+        jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET || "jwt");
         next();
     }
     catch (error) {
@@ -120,16 +120,12 @@ const validateLoginPassword = async (req, res, next) => {
     const requestPassword = req.body.password;
     /// Only email is used by db to retrieve user
     /// Other params exist to prevent missing params compilation error
-    const returnType = await injector_1.default.db.get({
-        isUser: true,
-        user: {
-            email: req.body.email,
-            password: requestPassword,
-            name: req.body.name,
-        },
-        rent: null,
+    const user = await injector_1.default.userDatabase.retrieveOne({
+        email: req.body.email,
+        password: requestPassword,
+        name: req.body.name,
     });
-    if (returnType === null || returnType === undefined) {
+    if (user === null || user === undefined) {
         res
             .status(404)
             .json(response_handler_1.default.responseJson(response_handler_1.default.responses.userNotFound))
@@ -137,7 +133,6 @@ const validateLoginPassword = async (req, res, next) => {
     }
     else {
         try {
-            const { user } = returnType;
             const oldPassword = user.password;
             const newPassword = req.body.password;
             const isMatch = await (0, helpers_1.comparePasswords)(newPassword, oldPassword);

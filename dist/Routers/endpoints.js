@@ -23,49 +23,54 @@ exports.routers = [
         route: signup,
         method: endpoints_interface_1.routerMethods.POST,
         handlers: (req, res, next) => injector_1.default.signup.call({ req, res, next }),
-        middlewares: [validators_1.refineAuthInput, validators_1.validateAuthInput]
+        middlewares: [validators_1.refineAuthInput, validators_1.validateAuthInput],
     },
     {
         route: login,
         method: endpoints_interface_1.routerMethods.POST,
         handlers: (req, res, next) => injector_1.default.login.call({ req, res, next }),
-        middlewares: [validators_1.refineAuthInput, validators_1.validateToken, validators_1.validateAuthInput, validators_1.validateLoginPassword]
+        middlewares: [
+            validators_1.refineAuthInput,
+            validators_1.validateToken,
+            validators_1.validateAuthInput,
+            validators_1.validateLoginPassword,
+        ],
     },
     {
         route: getUser,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getUser.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateAuthInput]
+        middlewares: [validators_1.validateToken, validators_1.validateAuthInput],
     },
     {
         route: getAllUsers,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getAllUsers.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateAuthInput]
+        middlewares: [validators_1.validateToken, validators_1.validateAuthInput],
     },
     /// Rental Service
     {
         route: rentBook,
         method: endpoints_interface_1.routerMethods.POST,
         handlers: (req, res, next) => injector_1.default.rentBook.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateRentalInput]
+        middlewares: [validators_1.validateToken, validators_1.validateRentalInput],
     },
     {
         route: turnInBook,
         method: endpoints_interface_1.routerMethods.POST,
         handlers: (req, res, next) => injector_1.default.turnInBook.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateRentalInput]
+        middlewares: [validators_1.validateToken, validators_1.validateRentalInput],
     },
     {
         route: getBook,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getBook.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateRentalInput]
+        middlewares: [validators_1.validateToken, validators_1.validateRentalInput],
     },
     {
         route: getAllBooks,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getAllBooks.call({ req, res, next }),
-        middlewares: [validators_1.validateToken, validators_1.validateRentalInput]
-    }
+        middlewares: [validators_1.validateToken, validators_1.validateRentalInput],
+    },
 ];

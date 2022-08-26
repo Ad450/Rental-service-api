@@ -13,6 +13,8 @@ import GetAllBooks from "../usecases/rental_usecases/get_all_books";
 import GetBook from "../usecases/rental_usecases/get_all_books";
 import RentBook from "../usecases/rental_usecases/rent_book";
 import TurnInBook from "../usecases/rental_usecases/turn_in_book";
+import { UserDatabase } from "../db/prisma_db";
+import { PrismaClient } from "@prisma/client";
 
 export default abstract class Injector {
   /// usecases
@@ -41,7 +43,7 @@ export default abstract class Injector {
   static turnInBook = new TurnInBook(
     new RentalServiceImpl(new RentalServiceHandler(new DatabaseServiceImpl()))
   );
-
+  static userDatabase = new UserDatabase(new PrismaClient());
   /// database
   static db = new DatabaseServiceImpl();
 }

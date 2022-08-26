@@ -44,7 +44,10 @@ export const comparePasswords = async (
   }
 };
 
-export const hashData = async (input: string): Promise<string> => {
+export const hashData = async (
+  input: string,
+  nonce: string
+): Promise<string> => {
   try {
     const hash = await bcrypt.hash(input, 4);
 

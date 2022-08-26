@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+
 type UserType = {
   name: string;
   email: string;
@@ -81,13 +82,67 @@ export class BookDatabase implements Prisma<BookType> {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  retrieveOne<T extends BookType>(param: T): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async retrieveOne<T extends BookType>(param: T): Promise<void> {
+    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    try {
+      await this.prisma.book.findUnique({
+        where: {
+          hash: hash,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
-  retrieve<T extends BookType>(param: T): Promise<void> {
-    throw new Error("Method not implemented.");
+  async retrieve<T extends BookType>(param: T): Promise<void> {
+    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    try {
+      await this.prisma.book.findMany({
+        where: {
+          name: name,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
-  async create<T extends BookType>(param: T): Promise<void> {}
-  async update<T extends BookType>(param: T): Promise<void> {}
+  async create<T extends BookType>(param: T): Promise<void> {
+    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    try {
+      await this.prisma.book.create({
+        data: {
+          name: name,
+          hash: hash,
+          startDate: startDate,
+          endDate: endDate,
+          rented: rented,
+          rentedBy: rentedBy,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async update<T extends BookType>(param: T): Promise<void> {
+    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    try {
+      await this.prisma.book.update({
+        where: {
+          hash: hash,
+        },
+        data: {
+          name: name,
+          hash: hash,
+          startDate: startDate,
+          endDate: endDate,
+          rented: rented,
+          rentedBy: rentedBy,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async delete<T extends BookType>(param: T): Promise<void> {}
 }

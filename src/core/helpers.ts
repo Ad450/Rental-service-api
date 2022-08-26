@@ -13,7 +13,7 @@ export const generateAccessToken = async (req: Request): Promise<string> => {
     );
     return accessToken;
   } catch (error) {
-    // will do a proper error handling
+    //TODO will do a proper error handling
     throw new Error("Access token generation failed");
   }
 };

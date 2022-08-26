@@ -16,8 +16,8 @@ const userSchema = new mongoose_1.default.Schema({
     },
     name: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 const bookSchema = new mongoose_1.default.Schema({
     name: {
@@ -30,11 +30,11 @@ const bookSchema = new mongoose_1.default.Schema({
     },
     startDate: {
         type: String,
-        required: false
+        required: false,
     },
     endDate: {
         type: String,
-        required: false
+        required: false,
     },
     isRented: {
         type: Boolean,
@@ -42,11 +42,17 @@ const bookSchema = new mongoose_1.default.Schema({
     },
     rentedBy: {
         type: String,
-        required: true
+        required: true,
     },
 });
 const connectMongoose = async () => {
-    await mongoose_1.default.connect(process.env.DATABASE_URL || "");
+    try {
+        await mongoose_1.default.connect(process.env.DATABASE_URL || "");
+        console.log("mongoose connected");
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 exports.connectMongoose = connectMongoose;
 exports.BookModel = mongoose_1.default.model("Book", bookSchema);

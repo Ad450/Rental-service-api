@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("../core/helpers");
 const response_handler_1 = __importDefault(require("../response_handlers/response_handler"));
+const injector_1 = __importDefault(require("../di/injector"));
 class AuthServiceHandler {
     constructor(dbService) {
         this.dbService = dbService;
@@ -12,21 +13,18 @@ class AuthServiceHandler {
     async signup(req, res, next) {
         // hash password with bycrypt and insert user data into db
         const encryptedPassword = await (0, helpers_1.hashData)(req.body.password);
-        console.log(encryptedPassword);
         const userData = {
             email: req.body.email,
             password: encryptedPassword,
-            name: req.body.email,
+            name: req.body.name,
         };
         try {
-            await this.dbService.create({
-                isUser: true,
-                rent: null,
-                user: {
-                    email: req.body.email,
-                    password: encryptedPassword,
-                    name: req.body.email,
-                },
+            const { email, password, name } = userData;
+            console.log(email);
+            await injector_1.default.userDatabase.create({
+                email: email,
+                password: password,
+                name: name,
             });
             const accessToken = await (0, helpers_1.generateAccessToken)(req);
             res.setHeader("authorization", `Bearer ${accessToken}`);
@@ -40,8 +38,8 @@ class AuthServiceHandler {
             // testing
             console.log(error);
             res
-                .status(404)
-                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.userAlreadyExists))
+                .status(500)
+                .json(response_handler_1.default.responseJson(error.toString()))
                 .end();
         }
     }

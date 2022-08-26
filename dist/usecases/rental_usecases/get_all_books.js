@@ -9,7 +9,7 @@ class GetAllBooks {
         const serviceParams = {
             req: req,
             res: res,
-            next: next
+            next: next,
         };
         try {
             this.rentService.getAllBook(serviceParams);

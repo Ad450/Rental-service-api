@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class ApiResponse {
     static responseJson(input) {
         return {
-            "message": input
+            message: input,
         };
     }
 }
@@ -22,6 +22,7 @@ ApiResponse._authorizationFailed = "authorization failed";
 ApiResponse._bookHandedIn = "book handed in";
 ApiResponse._bookRented = "book rented";
 ApiResponse._bookNotFound = "book not found";
+ApiResponse._genericError = "something bad happened";
 ApiResponse.responses = {
     userAlreadyExists: ApiResponse._userAlreadyExists,
     userNotFound: ApiResponse._userNotFound,
@@ -37,4 +38,5 @@ ApiResponse.responses = {
     bookHandedIn: ApiResponse._bookHandedIn,
     bookRented: ApiResponse._bookRented,
     bookNotFound: ApiResponse._bookNotFound,
+    genericError: ApiResponse._genericError,
 };

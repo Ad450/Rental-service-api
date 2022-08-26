@@ -9,7 +9,7 @@ class RentBook {
         const serviceParams = {
             req: req,
             res: res,
-            next: next
+            next: next,
         };
         try {
             this.rentService.rentBook(serviceParams);

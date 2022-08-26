@@ -9,7 +9,7 @@ class Signup {
         const serviceParams = {
             req: req,
             res: res,
-            next: next
+            next: next,
         };
         try {
             this.authService.signup(serviceParams);

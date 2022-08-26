@@ -33,7 +33,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 dotenv.config();
 const generateAccessToken = async (req) => {
     try {
-        const accessToken = jsonwebtoken_1.default.sign(req.body, process.env.ACCESS_TOKEN_SECRET || "");
+        const accessToken = jsonwebtoken_1.default.sign(req.body, process.env.ACCESS_TOKEN_SECRET || "jwt");
         return accessToken;
     }
     catch (error) {

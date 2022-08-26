@@ -9,7 +9,7 @@ class GetUser {
         const serviceParams = {
             req: req,
             res: res,
-            next: next
+            next: next,
         };
         try {
             this.authService.getUser(serviceParams);

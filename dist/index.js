@@ -30,7 +30,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const endpoints_1 = require("./Routers/endpoints");
-const db_setup_1 = require("./db/db_setup");
+const prisma_db_setup_1 = require("./db/prisma_db_setup");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
@@ -56,7 +56,7 @@ const startApp = async () => {
         app.listen(process.env.SERVER_PORT || 3000, () => {
             console.log("sever started on port " + process.env.SERVER_PORT + ", more fire");
         });
-        await (0, db_setup_1.connectMongoose)();
+        await (0, prisma_db_setup_1.connectPrisma)();
     }
     catch (error) {
         console.log(error);

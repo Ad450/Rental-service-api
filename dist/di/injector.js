@@ -16,6 +16,8 @@ const get_all_books_1 = __importDefault(require("../usecases/rental_usecases/get
 const get_all_books_2 = __importDefault(require("../usecases/rental_usecases/get_all_books"));
 const rent_book_1 = __importDefault(require("../usecases/rental_usecases/rent_book"));
 const turn_in_book_1 = __importDefault(require("../usecases/rental_usecases/turn_in_book"));
+const prisma_db_1 = require("../db/prisma_db");
+const client_1 = require("@prisma/client");
 class Injector {
 }
 exports.default = Injector;
@@ -28,5 +30,6 @@ Injector.getBook = new get_all_books_2.default(new rental_service_impl_1.default
 Injector.getAllBooks = new get_all_books_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
 Injector.rentBook = new rent_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
 Injector.turnInBook = new turn_in_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new db_service_impl_1.default())));
+Injector.userDatabase = new prisma_db_1.UserDatabase(new client_1.PrismaClient());
 /// database
 Injector.db = new db_service_impl_1.default();

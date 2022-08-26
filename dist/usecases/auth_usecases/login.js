@@ -9,7 +9,7 @@ class Login {
         const serviceParams = {
             req: req,
             res: res,
-            next: next
+            next: next,
         };
         try {
             return this.authService.login(serviceParams);

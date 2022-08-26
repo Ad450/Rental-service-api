@@ -6,6 +6,7 @@ import {
   BookFromDb,
 } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
+import Injector from "../di/injector";
 
 export default class RentalServiceHandler {
   dbService: DatabaseService<DatabaseParam>;
@@ -22,46 +23,34 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.name, req.body.name);
 
     try {
-      const book = await this.dbService.get({
-        isUser: false,
-        user: null,
-        rent: {
-          name: req.body.name,
-          hash: hash,
-          /// params below are not needed to retrieve book
-          /// exist to escape missing params in type rent: RentalParams
-          isRented: true,
-          rentedBy: encryptedPassword,
-          startDate: req.body.startDate,
-          endDate: req.body.endDate,
-        },
+      const book = await Injector.bookDatabase.retrieveOne({
+        name: req.body.name,
+        hash: hash,
+        /// params below are not needed to retrieve book
+        /// exist to escape missing params in type rent: RentalParams
+        rented: true,
+        rentedBy: encryptedPassword,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
       });
 
       if (book === null || undefined) {
-        this.dbService.create({
-          isUser: false,
-          rent: {
-            name: req.body.name,
-            hash: hash,
-            isRented: true,
-            rentedBy: encryptedPassword,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-          },
-          user: null,
+        Injector.bookDatabase.create({
+          name: req.body.name,
+          hash: hash,
+          rented: true,
+          rentedBy: encryptedPassword,
+          startDate: req.body.startDate,
+          endDate: req.body.endDate,
         });
       } else if (book) {
-        this.dbService.update({
-          isUser: false,
-          rent: {
-            name: req.body.name,
-            hash: hash,
-            isRented: true,
-            rentedBy: encryptedPassword,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-          },
-          user: null,
+        Injector.bookDatabase.update({
+          name: req.body.name,
+          hash: hash,
+          rented: true,
+          rentedBy: encryptedPassword,
+          startDate: req.body.startDate,
+          endDate: req.body.endDate,
         });
       }
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Book, PrismaClient, User } from "@prisma/client";
 
 type UserType = {
   name: string;
@@ -15,33 +15,40 @@ type BookType = {
   rentedBy: string | null;
 };
 
-abstract class Prisma<K> {
+abstract class Prisma<K, Y> {
   abstract create<T extends K>(param: T): Promise<void>;
   abstract update<T extends K>(param: T): Promise<void>;
   abstract delete<T extends K>(param: T): Promise<void>;
-  abstract retrieve<T extends K>(param: T): Promise<void>;
-  abstract retrieveOne<T extends K>(param: T): Promise<void>;
+  abstract retrieve<T extends K>(param: T): Promise<Array<Y> | null>;
+  abstract retrieveOne<T extends K>(param: T): Promise<Y | null>;
 }
 
-export class UserDatabase implements Prisma<UserType> {
+export class UserDatabase implements Prisma<UserType, User> {
   prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async retrieveOne<T extends UserType>(param: T): Promise<void> {
+  async retrieveOne<T extends UserType>(param: T): Promise<User | null> {
     const { name, email, password } = param;
     try {
-      await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: {
           email: email,
         },
       });
-    } catch (error) {}
+      return user;
+    } catch (error) {
+      throw new Error("database error");
+    }
   }
-  async retrieve<T extends UserType>(param: T): Promise<void> {
+  async retrieve<T extends UserType>(param: T): Promise<Array<User> | null> {
     try {
-    } catch (error) {}
+      // returning null for skip return error
+      return null;
+    } catch (error) {
+      throw new Error("database error");
+    }
   }
   async create<T extends UserType>(param: T): Promise<void> {
     const { name, email, password } = param;
@@ -76,35 +83,37 @@ export class UserDatabase implements Prisma<UserType> {
   async delete<T extends UserType>(param: T): Promise<void> {}
 }
 
-export class BookDatabase implements Prisma<BookType> {
+export class BookDatabase implements Prisma<BookType, Book> {
   prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  async retrieveOne<T extends BookType>(param: T): Promise<void> {
+  async retrieveOne<T extends BookType>(param: T): Promise<Book | null> {
     const { name, hash, startDate, endDate, rented, rentedBy } = param;
     try {
-      await this.prisma.book.findUnique({
+      const book = await this.prisma.book.findUnique({
         where: {
           hash: hash,
         },
       });
+      return book;
     } catch (error) {
-      console.log(error);
+      throw new Error("database error");
     }
   }
-  async retrieve<T extends BookType>(param: T): Promise<void> {
+  async retrieve<T extends BookType>(param: T): Promise<Array<Book> | null> {
     const { name, hash, startDate, endDate, rented, rentedBy } = param;
     try {
-      await this.prisma.book.findMany({
+      const book = await this.prisma.book.findMany({
         where: {
           name: name,
         },
       });
+      return book;
     } catch (error) {
-      console.log(error);
+      throw new Error("database error");
     }
   }
   async create<T extends BookType>(param: T): Promise<void> {

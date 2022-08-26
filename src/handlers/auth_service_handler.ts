@@ -9,6 +9,7 @@ import { TrialDatabase } from "../db/TrialDatabase";
 import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
 import DatabaseService from "../db/db_service";
+import Injector from "../di/injector";
 
 export default class AuthServiceHandler {
   dbService: DatabaseService<DatabaseParam>;
@@ -20,22 +21,20 @@ export default class AuthServiceHandler {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     // hash password with bycrypt and insert user data into db
     const encryptedPassword = await hashData(req.body.password);
-    console.log(encryptedPassword);
 
     const userData: UserParam = {
       email: req.body.email,
       password: encryptedPassword,
-      name: req.body.email,
+      name: req.body.name,
     };
     try {
-      await this.dbService.create({
-        isUser: true,
-        rent: null,
-        user: {
-          email: req.body.email,
-          password: encryptedPassword,
-          name: req.body.email,
-        },
+      const { email, password, name } = userData;
+      console.log(email);
+
+      await Injector.userDatabase.create({
+        email: email!,
+        password: password!,
+        name: name!,
       });
 
       const accessToken = await generateAccessToken(req);
@@ -51,8 +50,8 @@ export default class AuthServiceHandler {
       console.log(error);
 
       res
-        .status(404)
-        .json(ApiResponse.responseJson(ApiResponse.responses.userAlreadyExists))
+        .status(500)
+        .json(ApiResponse.responseJson((error as Object).toString()))
         .end();
     }
   }

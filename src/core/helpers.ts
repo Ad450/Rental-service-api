@@ -1,8 +1,6 @@
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
-import { scrypt, randomBytes } from "crypto";
-import { promisify } from "util";
 import bcrypt from "bcrypt";
 
 dotenv.config();
@@ -11,7 +9,7 @@ export const generateAccessToken = async (req: Request): Promise<string> => {
   try {
     const accessToken = jwt.sign(
       req.body,
-      process.env.ACCESS_TOKEN_SECRET || ""
+      process.env.ACCESS_TOKEN_SECRET || "jwt"
     );
     return accessToken;
   } catch (error) {

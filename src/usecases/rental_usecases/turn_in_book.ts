@@ -1,27 +1,27 @@
 import { Request, Response, NextFunction } from "express";
-import BaseUsecase from "../../core/typedefs";
+import BaseUsecase from "../../core/base_usecase";
 import RentalServiceParam from "../../interfaces/rental_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
 import RentalService from "../../services/rental_service/rental_service";
 
 export default class TurnInBook implements BaseUsecase<UsecaseParam> {
-    rentService: RentalService<RentalServiceParam>;
+  rentService: RentalService<RentalServiceParam>;
 
-    constructor(rentService: RentalService<RentalServiceParam>) {
-        this.rentService = rentService;
-    }
+  constructor(rentService: RentalService<RentalServiceParam>) {
+    this.rentService = rentService;
+  }
 
-    async call(param: UsecaseParam): Promise<void> {
-        const { req, res, next } = param;
-        const serviceParams: RentalServiceParam = {
-            req: req,
-            res: res,
-            next: next
-        }
-        try {
-            this.rentService.turnInBook(serviceParams);
-        } catch (error) {
-            console.warn(error);
-        }
+  async call(param: UsecaseParam): Promise<void> {
+    const { req, res, next } = param;
+    const serviceParams: RentalServiceParam = {
+      req: req,
+      res: res,
+      next: next,
+    };
+    try {
+      this.rentService.turnInBook(serviceParams);
+    } catch (error) {
+      console.warn(error);
     }
+  }
 }

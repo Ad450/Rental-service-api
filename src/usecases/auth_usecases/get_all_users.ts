@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import BaseUsecase from "../../core/typedefs";
+import BaseUsecase from "../../core/base_usecase";
+
 import { AuthServiceParam } from "../../interfaces/auth_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
 import AuthService from "../../services/auth_service/auth_service";

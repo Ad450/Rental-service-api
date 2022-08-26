@@ -5,5 +5,5 @@ import UsecaseParam from "../interfaces/usecase_params";
 /// various usecases and their params . That is, they will implement the UsecaseParam
 
 export default abstract class BaseUsecase<T extends UsecaseParam> {
-    abstract call(param: T): Promise<void>
+  abstract call(param: T): Promise<void>;
 }

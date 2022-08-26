@@ -7,12 +7,14 @@ import {
 } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
 import Injector from "../di/injector";
+import { BookDatabase, BookType } from "../db/prisma_db";
+import { Book } from "../db/TrialDatabaseImpl";
 
 export default class RentalServiceHandler {
-  dbService: DatabaseService<DatabaseParam>;
+  bookDatabase: BookDatabase;
 
-  constructor(dbService: DatabaseService<DatabaseParam>) {
-    this.dbService = dbService;
+  constructor(bookDatabase: BookDatabase) {
+    this.bookDatabase = bookDatabase;
   }
 
   async rentBook(req: Request, res: Response, next: NextFunction) {
@@ -23,7 +25,7 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.name, req.body.name);
 
     try {
-      const book = await Injector.bookDatabase.retrieveOne({
+      const book = await this.bookDatabase.retrieveOne({
         name: req.body.name,
         hash: hash,
         /// params below are not needed to retrieve book
@@ -35,7 +37,7 @@ export default class RentalServiceHandler {
       });
 
       if (book === null || undefined) {
-        Injector.bookDatabase.create({
+        this.bookDatabase.create({
           name: req.body.name,
           hash: hash,
           rented: true,
@@ -44,7 +46,7 @@ export default class RentalServiceHandler {
           endDate: req.body.endDate,
         });
       } else if (book) {
-        Injector.bookDatabase.update({
+        this.bookDatabase.update({
           name: req.body.name,
           hash: hash,
           rented: true,
@@ -72,37 +74,29 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.password, req.body.startDate);
 
     try {
-      const existingBook = await this.dbService.get({
-        isUser: false,
-        rent: {
-          name: req.body.name,
-          hash: hash,
-          /// params below are not necessary needed to retrieve book
-          isRented: false,
-          rentedBy: "",
-          startDate: "",
-          endDate: "",
-        },
-        user: null,
+      const book = await this.bookDatabase.retrieveOne({
+        name: req.body.name,
+        hash: hash,
+        /// params below are not necessary needed to retrieve book
+        rented: false,
+        rentedBy: "",
+        startDate: "",
+        endDate: "",
       });
 
-      if (!existingBook) {
+      if (!book) {
         res
           .status(200)
           .json(ApiResponse.responseJson(ApiResponse.responses.bookNotFound))
           .end();
       } else {
-        await this.dbService.update({
-          isUser: false,
-          rent: {
-            name: req.body.name,
-            hash: hash,
-            isRented: false,
-            rentedBy: "", /// clear up all data relating to previous user
-            startDate: "", /// thereby all relating fields are set to empty string values
-            endDate: "",
-          },
-          user: null,
+        await this.bookDatabase.update({
+          name: req.body.name,
+          hash: hash,
+          rented: false,
+          rentedBy: "", /// clear up all data relating to previous user
+          startDate: "", /// thereby all relating fields are set to empty string values
+          endDate: "",
         });
         res
           .status(200)
@@ -115,43 +109,30 @@ export default class RentalServiceHandler {
     }
   }
 
-  async getBook(req: Request, res: Response): Promise<BookFromDb | null> {
+  async getBook(req: Request, res: Response): Promise<BookType | null> {
     const encryptedPassword = await encryptPassword(req);
     const hash = await hashData(req.body.password, req.body.startDate);
     try {
-      const book = await this.dbService.get({
-        isUser: false,
-        user: null,
-        rent: {
-          name: req.body.name,
-          hash: hash,
-          // params below are not needed to retrieve book
-          // exist to escape missing params in type rent: RentalParams
-          isRented: true,
-          rentedBy: encryptedPassword,
-          startDate: req.body.startDate,
-          endDate: req.body.endDate,
-        },
+      const book = await this.bookDatabase.retrieveOne({
+        name: req.body.name,
+        hash: hash,
+        // params below not needed to retrieve book
+        rented: false,
+        rentedBy: encryptedPassword,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
       });
 
       if (book === null || undefined) {
         res
           .status(500)
-          .json(ApiResponse.responseJson(ApiResponse.responses.serverError));
+          .json(ApiResponse.responseJson(ApiResponse.responses.serverError))
+          .end();
+        return null;
+      } else {
+        res.status(200).json(JSON.stringify(book)).end();
+        return book;
       }
-
-      const { rent } = book!;
-
-      const bookFromDB: BookFromDb = {
-        id: rent!.id,
-        name: rent!.name,
-        hash: rent!.hash,
-        isRented: rent!.isRented,
-        rentedBy: rent!.rentedBy,
-        startDate: rent!.startDate,
-        endDate: rent!.endDate,
-      };
-      return bookFromDB;
     } catch (error) {
       res
         .status(500)

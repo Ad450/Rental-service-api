@@ -9,12 +9,13 @@ import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
 import DatabaseService from "../db/db_service";
 import Injector from "../di/injector";
+import { UserDatabase } from "../db/prisma_db";
 
 export default class AuthServiceHandler {
-  dbService: DatabaseService<DatabaseParam>;
+  userDatabase: UserDatabase;
 
-  constructor(dbService: DatabaseService<DatabaseParam>) {
-    this.dbService = dbService;
+  constructor(userDatabase: UserDatabase) {
+    this.userDatabase = userDatabase;
   }
 
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -30,7 +31,7 @@ export default class AuthServiceHandler {
       const { email, password, name } = userData;
       console.log(email);
 
-      await Injector.userDatabase.create({
+      await this.userDatabase.create({
         email: email!,
         password: password!,
         name: name!,

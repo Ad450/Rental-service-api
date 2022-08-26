@@ -5,7 +5,6 @@ import {
   generateAccessToken,
   hashData,
 } from "../core/helpers";
-import { TrialDatabase } from "../db/TrialDatabase";
 import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
 import DatabaseService from "../db/db_service";
@@ -20,7 +19,7 @@ export default class AuthServiceHandler {
 
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     // hash password with bycrypt and insert user data into db
-    const encryptedPassword = await hashData(req.body.password);
+    const encryptedPassword = await hashData(req.body.name, req.body.password);
 
     const userData: UserParam = {
       email: req.body.email,

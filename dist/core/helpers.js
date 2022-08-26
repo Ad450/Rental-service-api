@@ -37,7 +37,7 @@ const generateAccessToken = async (req) => {
         return accessToken;
     }
     catch (error) {
-        // will do a proper error handling
+        //TODO will do a proper error handling
         throw new Error("Access token generation failed");
     }
 };

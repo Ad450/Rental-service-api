@@ -1,9 +1,10 @@
 import { BookFromDb } from "../../interfaces/database_service_param";
 import RentalServiceParam from "../../interfaces/rental_service_param";
+import { BookType } from "../../db/prisma_db";
 
-export default abstract class RentalService<RentalServiceParam>{
-    abstract rentBook(param: RentalServiceParam): Promise<void>;
-    abstract turnInBook(param: RentalServiceParam): Promise<void>;
-    abstract getBook(param: RentalServiceParam): Promise<BookFromDb | null>;
-    abstract getAllBook(param: RentalServiceParam): Promise<void>;
+export default abstract class RentalService<RentalServiceParam> {
+  abstract rentBook(param: RentalServiceParam): Promise<void>;
+  abstract turnInBook(param: RentalServiceParam): Promise<void>;
+  abstract getBook(param: RentalServiceParam): Promise<BookType | null>;
+  abstract getAllBook(param: RentalServiceParam): Promise<void>;
 }

@@ -32,7 +32,7 @@ export const validateToken = async (
     /// the authorization header has two strings Bearer and the token
     /// [1] returns the token
     const token = headers!.split(" ")[1];
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "");
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "jwt");
     next();
   } catch (error) {
     res
@@ -154,24 +154,19 @@ export const validateLoginPassword = async (
 
   /// Only email is used by db to retrieve user
   /// Other params exist to prevent missing params compilation error
-  const returnType = await Injector.db.get({
-    isUser: true,
-    user: {
-      email: req.body.email,
-      password: requestPassword,
-      name: req.body.name,
-    },
-    rent: null,
+  const user = await Injector.userDatabase.retrieveOne({
+    email: req.body.email,
+    password: requestPassword,
+    name: req.body.name,
   });
 
-  if (returnType === null || returnType === undefined) {
+  if (user === null || user === undefined) {
     res
       .status(404)
       .json(ApiResponse.responseJson(ApiResponse.responses.userNotFound))
       .end();
   } else {
     try {
-      const { user } = returnType!;
       const oldPassword = user!.password;
       const newPassword = req.body.password;
 

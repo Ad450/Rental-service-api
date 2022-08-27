@@ -7,7 +7,6 @@ import {
 } from "../core/helpers";
 import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
-import DatabaseService from "../db/db_service";
 import Injector from "../di/injector";
 import { UserDatabase } from "../db/prisma_db";
 

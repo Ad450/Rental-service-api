@@ -1,5 +1,3 @@
-import DatabaseService from "../db/db_service";
-import DatabaseServiceImpl from "../db/db_service_impl";
 import AuthServiceHandler from "../handlers/auth_service_handler";
 import RentalServiceHandler from "../handlers/rental_service_handler";
 import { DatabaseParam } from "../interfaces/database_service_param";
@@ -59,7 +57,6 @@ export default abstract class Injector {
       new RentalServiceHandler(new BookDatabase(new PrismaClient()))
     )
   );
-  // static userDatabase = new UserDatabase(new PrismaClient());
-  // static bookDatabase = new BookDatabase(new PrismaClient());
-  // static db = new DatabaseServiceImpl();
+  static userDatabase = new UserDatabase(new PrismaClient());
+  static bookDatabase = new BookDatabase(new PrismaClient());
 }

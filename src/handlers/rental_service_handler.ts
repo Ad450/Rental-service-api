@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { encryptData as encryptPassword, hashData } from "../core/helpers";
-import DatabaseService from "../db/db_service";
 import {
   DatabaseParam,
   BookFromDb,

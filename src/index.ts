@@ -66,7 +66,7 @@ const startApp = async () => {
   try {
     app.listen(process.env.SERVER_PORT || 3000, () => {
       console.log(
-        "sever started on port " + process.env.SERVER_PORT + ", more fire"
+        "server started on port " + process.env.SERVER_PORT + ", more fire"
       );
     });
     await connectPrisma();

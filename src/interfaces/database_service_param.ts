@@ -34,7 +34,6 @@ export type BookFromDb = {
   hash: string;
   startDate: string | null | undefined;
   endDate: string | null | undefined;
-  rented: boolean | null;
   rentedBy: string;
 };
 

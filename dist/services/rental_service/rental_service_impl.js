@@ -35,7 +35,14 @@ class RentalServiceImpl {
         }
     }
     async getAllBook(param) {
-        console.log("I got here");
+        const { req, res, next } = param;
+        try {
+            await this.rentalServiceHandler.getAllBooks(req, res, next);
+        }
+        catch (error) {
+            // TODO: use logger
+            console.log(error);
+        }
     }
 }
 exports.default = RentalServiceImpl;

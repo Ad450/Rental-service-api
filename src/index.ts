@@ -2,8 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
 import { routers } from "./Routers/endpoints";
-import { connectMongoose } from "./db/db_setup";
-import { connectPrisma } from "./db/prisma_db_setup";
+import { connectPrisma } from "./db/postgresql/prisma_db_setup";
 
 dotenv.config();
 

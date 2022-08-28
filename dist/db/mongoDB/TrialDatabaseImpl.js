@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Book = exports.User = void 0;
 const db_setup_1 = require("./db_setup");
-const helpers_1 = require("../core/helpers");
+const helpers_1 = require("../../core/helpers");
 //const UserModelType = typeof UserModel;
 class User {
 }

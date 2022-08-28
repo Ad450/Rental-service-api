@@ -30,7 +30,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const endpoints_1 = require("./Routers/endpoints");
-const prisma_db_setup_1 = require("./db/prisma_db_setup");
+const prisma_db_setup_1 = require("./db/postgresql/prisma_db_setup");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());

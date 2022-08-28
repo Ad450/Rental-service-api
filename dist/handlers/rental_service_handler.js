@@ -12,9 +12,9 @@ class RentalServiceHandler {
     async rentBook(req, res, next) {
         const encryptedPassword = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         const hash = await (0, helpers_1.hashData)(req.body.name, req.body.name);
-        console.log(req.params.id);
+        console.log(req.body);
         try {
-            const book = await this.bookDatabase.retrieveOne(parseInt(req.params.id));
+            const book = await this.bookDatabase.retrieveOne(parseInt(req.body.id));
             if (book === null || undefined) {
                 this.bookDatabase.create({
                     name: req.body.name,

@@ -18,6 +18,7 @@ export default abstract class ApiResponse {
   protected static _bookRented: string = "book rented";
   protected static _bookNotFound: string = "book not found";
   protected static _genericError: string = "something bad happened";
+  protected static _invalidParam: string = "invalid request param";
 
   static responses = {
     userAlreadyExists: ApiResponse._userAlreadyExists,
@@ -35,6 +36,7 @@ export default abstract class ApiResponse {
     bookRented: ApiResponse._bookRented,
     bookNotFound: ApiResponse._bookNotFound,
     genericError: ApiResponse._genericError,
+    invalidParam: ApiResponse._invalidParam,
   };
 
   static responseJson(input: string): {} {

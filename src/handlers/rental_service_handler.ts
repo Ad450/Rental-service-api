@@ -24,16 +24,7 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.name, req.body.name);
 
     try {
-      const book = await this.bookDatabase.retrieveOne({
-        name: req.body.name,
-        hash: hash,
-        /// params below are not needed to retrieve book
-        /// exist to escape missing params in type rent: RentalParams
-        rented: true,
-        rentedBy: encryptedPassword,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-      });
+      const book = await this.bookDatabase.retrieveOne(req.params.name);
 
       if (book === null || undefined) {
         this.bookDatabase.create({
@@ -73,15 +64,7 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.password, req.body.startDate);
 
     try {
-      const book = await this.bookDatabase.retrieveOne({
-        name: req.body.name,
-        hash: hash,
-        /// params below are not necessary needed to retrieve book
-        rented: false,
-        rentedBy: "",
-        startDate: "",
-        endDate: "",
-      });
+      const book = await this.bookDatabase.retrieveOne(req.params.name);
 
       if (!book) {
         res
@@ -112,15 +95,7 @@ export default class RentalServiceHandler {
     const encryptedPassword = await encryptPassword(req);
     const hash = await hashData(req.body.password, req.body.startDate);
     try {
-      const book = await this.bookDatabase.retrieveOne({
-        name: req.body.name,
-        hash: hash,
-        // params below not needed to retrieve book
-        rented: false,
-        rentedBy: encryptedPassword,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-      });
+      const book = await this.bookDatabase.retrieveOne(req.params.name);
 
       if (book === null || undefined) {
         res

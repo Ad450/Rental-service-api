@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Injector from "../di/injector";
+import { validateRequestParams } from "../middlewares/validators";
 import {
   refineAuthInput,
   validateAuthInput,
@@ -13,7 +14,7 @@ import EndpointsInterface, {
 
 // Rentals
 const getAllBooks: string = "/getAllBooks";
-const getBook: string = "/getBook:id";
+const getBook: string = "/getBook/:name";
 const rentBook: string = "/rentBook";
 const turnInBook: string = "/turnInBook";
 
@@ -79,7 +80,7 @@ export const routers: Array<EndpointsInterface> = [
     method: routerMethods.GET,
     handlers: (req: Request, res: Response, next: NextFunction) =>
       Injector.getBook.call({ req, res, next }),
-    middlewares: [validateToken, validateRentalInput],
+    middlewares: [validateToken, validateRequestParams],
   },
   {
     route: getAllBooks,

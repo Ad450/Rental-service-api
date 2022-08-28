@@ -30,18 +30,16 @@ export default class RentalServiceImpl
       console.log(error);
     }
   }
-  async getBook(param: RentalServiceParam): Promise<BookType | null> {
+  async getBook(param: RentalServiceParam): Promise<void> {
     const { req, res, next } = param;
     try {
-      const result = await this.rentalServiceHandler.getBook(req, res);
-      return result;
+      await this.rentalServiceHandler.getBook(req, res);
     } catch (error) {
       // TODO: use logger
       console.log(error);
-      return null;
     }
   }
   async getAllBook(param: RentalServiceParam): Promise<void> {
-    throw new Error("Method not implemented.");
+    console.log("I got here");
   }
 }

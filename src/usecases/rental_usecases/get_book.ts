@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from "express";
 import BaseUsecase from "../../core/base_usecase";
 import RentalServiceParam from "../../interfaces/rental_service_param";
 import UsecaseParam from "../../interfaces/usecase_params";
@@ -21,7 +20,7 @@ export default class GetBook implements BaseUsecase<UsecaseParam> {
     try {
       this.rentService.getBook(serviceParams);
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   }
 }

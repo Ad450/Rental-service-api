@@ -19,8 +19,8 @@ abstract class Prisma<K, Y> {
   abstract create<T extends K>(param: T): Promise<void>;
   abstract update<T extends K>(param: T): Promise<void>;
   abstract delete<T extends K>(param: T): Promise<void>;
-  abstract retrieve<T extends K>(param: T): Promise<Array<Y> | null>;
-  abstract retrieveOne<T extends K>(param: T): Promise<Y | null>;
+  abstract retrieve(identifier: string): Promise<Array<Y> | null>;
+  abstract retrieveOne(identifier: string): Promise<Y | null>;
 }
 
 export class UserDatabase implements Prisma<UserType, User> {
@@ -29,12 +29,11 @@ export class UserDatabase implements Prisma<UserType, User> {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async retrieveOne<T extends UserType>(param: T): Promise<User | null> {
-    const { name, email, password } = param;
+  async retrieveOne(identifier: string): Promise<User | null> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
-          email: email,
+          email: identifier,
         },
       });
       return user;
@@ -42,7 +41,9 @@ export class UserDatabase implements Prisma<UserType, User> {
       throw new Error("database error");
     }
   }
-  async retrieve<T extends UserType>(param: T): Promise<Array<User> | null> {
+  async retrieve<T extends UserType>(
+    identifier: string
+  ): Promise<Array<User> | null> {
     try {
       // returning null for skip return error
       return null;
@@ -90,12 +91,13 @@ export class BookDatabase implements Prisma<BookType, Book> {
     this.prisma = prisma;
   }
 
-  async retrieveOne<T extends BookType>(param: T): Promise<Book | null> {
-    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+  async retrieveOne<T extends BookType>(
+    identifier: string
+  ): Promise<Book | null> {
     try {
       const book = await this.prisma.book.findUnique({
         where: {
-          hash: hash,
+          name: identifier,
         },
       });
       return book;
@@ -103,12 +105,13 @@ export class BookDatabase implements Prisma<BookType, Book> {
       throw new Error("database error");
     }
   }
-  async retrieve<T extends BookType>(param: T): Promise<Array<Book> | null> {
-    const { name, hash, startDate, endDate, rented, rentedBy } = param;
+  async retrieve<T extends BookType>(
+    identifier: string
+  ): Promise<Array<Book> | null> {
     try {
       const book = await this.prisma.book.findMany({
         where: {
-          name: name,
+          name: identifier,
         },
       });
       return book;

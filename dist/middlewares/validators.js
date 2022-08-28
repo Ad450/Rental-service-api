@@ -34,26 +34,11 @@ const validateToken = async (req, res, next) => {
 exports.validateToken = validateToken;
 const validateRentalInput = async (req, res, next) => {
     try {
-        // assert((req.body as Map<any, any>).has("name"));
-        // assert((req.body as Map<any, any>).has("startDate"));
-        // assert((req.body as Map<any, any>).has("endDate"));
-        // assert((req.body as Map<any, any>).has("password"));
-        // assert(req.body.name !== undefined || null);
-        // assert(req.body.startDate !== undefined || null);
-        // assert(req.body.endDate !== undefined || null);
-        // assert(req.body.password !== undefined || null);
-        // assert(req.body.id !== null || undefined);
-        if (req.body.name === null ||
-            (undefined && req.body.startDate === undefined) ||
-            (null && req.body.endDate !== undefined) ||
-            (null && req.body.password !== undefined) ||
-            (null && req.body.id !== null) ||
-            undefined) {
-            res
-                .status(401)
-                .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidCredentials))
-                .end();
-        }
+        (0, assert_1.default)(req.body.name !== undefined || null);
+        (0, assert_1.default)(req.body.startDate !== undefined || null);
+        (0, assert_1.default)(req.body.endDate !== undefined || null);
+        (0, assert_1.default)(req.body.password !== undefined || null);
+        (0, assert_1.default)(req.body.id !== null || undefined);
         next();
     }
     catch (error) {

@@ -21,13 +21,13 @@ class Injector {
 }
 exports.default = Injector;
 /// usecases
-Injector.login = new login_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
-Injector.signup = new signup_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
-Injector.getUser = new get_user_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
-Injector.getAllUsers = new get_all_users_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabase(new client_1.PrismaClient()))));
+Injector.login = new login_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabasePrisma(new client_1.PrismaClient()))));
+Injector.signup = new signup_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabasePrisma(new client_1.PrismaClient()))));
+Injector.getUser = new get_user_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabasePrisma(new client_1.PrismaClient()))));
+Injector.getAllUsers = new get_all_users_1.default(new auth_service_impl_1.default(new auth_service_handler_1.default(new prisma_db_1.UserDatabasePrisma(new client_1.PrismaClient()))));
 Injector.getBook = new get_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
 Injector.getAllBooks = new get_all_books_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
 Injector.rentBook = new rent_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
 Injector.turnInBook = new turn_in_book_1.default(new rental_service_impl_1.default(new rental_service_handler_1.default(new prisma_db_1.BookDatabase(new client_1.PrismaClient()))));
-Injector.userDatabase = new prisma_db_1.UserDatabase(new client_1.PrismaClient());
+Injector.userDatabase = new prisma_db_1.UserDatabasePrisma(new client_1.PrismaClient());
 Injector.bookDatabase = new prisma_db_1.BookDatabase(new client_1.PrismaClient());

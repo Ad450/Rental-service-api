@@ -15,7 +15,7 @@ class RentalServiceHandler {
         console.log(req.body);
         try {
             const book = await this.bookDatabase.retrieveOne(parseInt(req.body.id));
-            if (book === null || undefined) {
+            if (!book) {
                 this.bookDatabase.create({
                     name: req.body.name,
                     hash: hash,

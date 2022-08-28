@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookDatabase = exports.UserDatabase = void 0;
-class Prisma {
-}
-class UserDatabase {
+exports.BookDatabase = exports.UserDatabasePrisma = void 0;
+class UserDatabasePrisma {
     constructor(prisma) {
         this.prisma = prisma;
     }
@@ -63,7 +61,7 @@ class UserDatabase {
     }
     async delete(param) { }
 }
-exports.UserDatabase = UserDatabase;
+exports.UserDatabasePrisma = UserDatabasePrisma;
 class BookDatabase {
     constructor(prisma) {
         this.prisma = prisma;

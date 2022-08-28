@@ -120,7 +120,7 @@ const validateLoginPassword = async (req, res, next) => {
     const requestPassword = req.body.password;
     /// Only email is used by db to retrieve user
     /// Other params exist to prevent missing params compilation error
-    const user = await injector_1.default.userDatabase.retrieveOne(req.params.email);
+    const user = await injector_1.default.userDatabase.retrieveOne(Number(req.params.id));
     if (user === null || user === undefined) {
         res
             .status(404)
@@ -152,8 +152,7 @@ const validateLoginPassword = async (req, res, next) => {
 };
 exports.validateLoginPassword = validateLoginPassword;
 async function validateRequestParams(req, res, next) {
-    if (req.params.name === null || undefined) {
-        console.log(req.params.nam);
+    if (req.params === null) {
         res
             .status(404)
             .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidParam))

@@ -12,8 +12,9 @@ class RentalServiceHandler {
     async rentBook(req, res, next) {
         const encryptedPassword = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         const hash = await (0, helpers_1.hashData)(req.body.name, req.body.name);
+        console.log(req.params.id);
         try {
-            const book = await this.bookDatabase.retrieveOne(req.params.name);
+            const book = await this.bookDatabase.retrieveOne(parseInt(req.params.id));
             if (book === null || undefined) {
                 this.bookDatabase.create({
                     name: req.body.name,
@@ -50,7 +51,7 @@ class RentalServiceHandler {
     async turnInBook(req, res) {
         const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.bookDatabase.retrieveOne(req.params.name);
+            const book = await this.bookDatabase.retrieveOne(Number(req.params.name));
             if (!book) {
                 res
                     .status(200)
@@ -81,7 +82,7 @@ class RentalServiceHandler {
         const encryptedPassword = await (0, helpers_1.encryptData)(req);
         const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.bookDatabase.retrieveOne(req.params.name);
+            const book = await this.bookDatabase.retrieveOne(Number(req.params.name));
             if (book === null || undefined) {
                 res
                     .status(500)
@@ -99,6 +100,28 @@ class RentalServiceHandler {
                 .status(500)
                 .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError));
             return null;
+        }
+    }
+    async getAllBooks(req, res, next) {
+        try {
+            const books = await this.bookDatabase.retrieve();
+            if (!books)
+                res
+                    .status(500)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                    .end();
+            else if (books.length === 0) {
+                res
+                    .status(500)
+                    .json(response_handler_1.default.responseJson(response_handler_1.default.responses.serverError))
+                    .end();
+            }
+            else {
+                res.status(200).json(JSON.stringify(books)).end();
+            }
+        }
+        catch (error) {
+            console.log(error);
         }
     }
 }

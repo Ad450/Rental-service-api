@@ -48,14 +48,11 @@ export const validateRentalInput = async (
   next: NextFunction
 ) => {
   try {
-    // assert((req.body as Map<any, any>).has("name"));
-    // assert((req.body as Map<any, any>).has("startDate"));
-    // assert((req.body as Map<any, any>).has("endDate"));
-    // assert((req.body as Map<any, any>).has("password"));
     assert(req.body.name !== undefined || null);
     assert(req.body.startDate !== undefined || null);
     assert(req.body.endDate !== undefined || null);
     assert(req.body.password !== undefined || null);
+    assert(req.body.id !== null || undefined);
 
     next();
   } catch (error) {

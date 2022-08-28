@@ -10,7 +10,7 @@ import Signup from "../usecases/auth_usecases/signup";
 import GetAllBooks from "../usecases/rental_usecases/get_all_books";
 import RentBook from "../usecases/rental_usecases/rent_book";
 import TurnInBook from "../usecases/rental_usecases/turn_in_book";
-import { UserDatabase, BookDatabase } from "../db/prisma_db";
+import { UserDatabase, BookDatabase } from "../db/postgresql/prisma_db";
 import { PrismaClient } from "@prisma/client";
 import GetBook from "../usecases/rental_usecases/get_book";
 

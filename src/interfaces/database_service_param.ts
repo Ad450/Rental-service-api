@@ -1,5 +1,5 @@
 import { Document, LeanDocument } from "mongoose";
-import { UserModel, BookModel } from "../db/db_setup";
+import { UserModel, BookModel } from "../db/mongoDB/db_setup";
 
 export type DatabaseParam = {
   user: UserParam | null;

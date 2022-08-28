@@ -15,7 +15,7 @@ class GetBook {
             this.rentService.getBook(serviceParams);
         }
         catch (error) {
-            console.warn(error);
+            console.log(error);
         }
     }
 }

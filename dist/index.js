@@ -45,12 +45,12 @@ const getBookIndex = 6;
 const getAllBooksIndex = 7;
 app.post(endpoints_1.routers[signupIndex].route, endpoints_1.routers[signupIndex].middlewares, endpoints_1.routers[signupIndex].handlers);
 app.post(endpoints_1.routers[loginIndex].route, endpoints_1.routers[loginIndex].middlewares, endpoints_1.routers[loginIndex].handlers);
-app.post(endpoints_1.routers[getUserIndex].route, endpoints_1.routers[getUserIndex].middlewares, endpoints_1.routers[getUserIndex].handlers);
-app.post(endpoints_1.routers[getAllUsersIndex].route, endpoints_1.routers[getAllUsersIndex].middlewares, endpoints_1.routers[getAllUsersIndex].handlers);
+app.get(endpoints_1.routers[getUserIndex].route, endpoints_1.routers[getUserIndex].middlewares, endpoints_1.routers[getUserIndex].handlers);
+app.get(endpoints_1.routers[getAllUsersIndex].route, endpoints_1.routers[getAllUsersIndex].middlewares, endpoints_1.routers[getAllUsersIndex].handlers);
 app.post(endpoints_1.routers[rentBookIndex].route, endpoints_1.routers[rentBookIndex].middlewares, endpoints_1.routers[rentBookIndex].handlers);
 app.post(endpoints_1.routers[turnInBookIndex].route, endpoints_1.routers[turnInBookIndex].middlewares, endpoints_1.routers[turnInBookIndex].handlers);
-app.post(endpoints_1.routers[getBookIndex].route, endpoints_1.routers[getBookIndex].middlewares, endpoints_1.routers[getBookIndex].handlers);
-app.post(endpoints_1.routers[getAllBooksIndex].route, endpoints_1.routers[getAllBooksIndex].middlewares, endpoints_1.routers[getAllBooksIndex].handlers);
+app.get(endpoints_1.routers[getBookIndex].route, endpoints_1.routers[getBookIndex].middlewares, endpoints_1.routers[getBookIndex].handlers);
+app.get(endpoints_1.routers[getAllBooksIndex].route, endpoints_1.routers[getAllBooksIndex].middlewares, endpoints_1.routers[getAllBooksIndex].handlers);
 const startApp = async () => {
     try {
         app.listen(process.env.SERVER_PORT || 3000, () => {

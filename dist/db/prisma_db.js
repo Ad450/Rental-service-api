@@ -7,12 +7,11 @@ class UserDatabase {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async retrieveOne(param) {
-        const { name, email, password } = param;
+    async retrieveOne(identifier) {
         try {
             const user = await this.prisma.user.findUnique({
                 where: {
-                    email: email,
+                    email: identifier,
                 },
             });
             return user;
@@ -21,7 +20,7 @@ class UserDatabase {
             throw new Error("database error");
         }
     }
-    async retrieve(param) {
+    async retrieve(identifier) {
         try {
             // returning null for skip return error
             return null;
@@ -69,12 +68,11 @@ class BookDatabase {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async retrieveOne(param) {
-        const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    async retrieveOne(identifier) {
         try {
             const book = await this.prisma.book.findUnique({
                 where: {
-                    hash: hash,
+                    name: identifier,
                 },
             });
             return book;
@@ -83,12 +81,11 @@ class BookDatabase {
             throw new Error("database error");
         }
     }
-    async retrieve(param) {
-        const { name, hash, startDate, endDate, rented, rentedBy } = param;
+    async retrieve(identifier) {
         try {
             const book = await this.prisma.book.findMany({
                 where: {
-                    name: name,
+                    name: identifier,
                 },
             });
             return book;

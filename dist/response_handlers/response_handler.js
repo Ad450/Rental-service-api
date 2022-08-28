@@ -23,6 +23,7 @@ ApiResponse._bookHandedIn = "book handed in";
 ApiResponse._bookRented = "book rented";
 ApiResponse._bookNotFound = "book not found";
 ApiResponse._genericError = "something bad happened";
+ApiResponse._invalidParam = "invalid request param";
 ApiResponse.responses = {
     userAlreadyExists: ApiResponse._userAlreadyExists,
     userNotFound: ApiResponse._userNotFound,
@@ -39,4 +40,5 @@ ApiResponse.responses = {
     bookRented: ApiResponse._bookRented,
     bookNotFound: ApiResponse._bookNotFound,
     genericError: ApiResponse._genericError,
+    invalidParam: ApiResponse._invalidParam,
 };

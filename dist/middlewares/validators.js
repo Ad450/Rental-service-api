@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateLoginPassword = exports.refineAuthInput = exports.validateAuthInput = exports.validateRentalInput = exports.validateToken = void 0;
+exports.validateRequestParams = exports.validateLoginPassword = exports.refineAuthInput = exports.validateAuthInput = exports.validateRentalInput = exports.validateToken = void 0;
 const assert_1 = __importDefault(require("assert"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const helpers_1 = require("../core/helpers");
@@ -120,11 +120,7 @@ const validateLoginPassword = async (req, res, next) => {
     const requestPassword = req.body.password;
     /// Only email is used by db to retrieve user
     /// Other params exist to prevent missing params compilation error
-    const user = await injector_1.default.userDatabase.retrieveOne({
-        email: req.body.email,
-        password: requestPassword,
-        name: req.body.name,
-    });
+    const user = await injector_1.default.userDatabase.retrieveOne(req.params.email);
     if (user === null || user === undefined) {
         res
             .status(404)
@@ -155,3 +151,16 @@ const validateLoginPassword = async (req, res, next) => {
     }
 };
 exports.validateLoginPassword = validateLoginPassword;
+async function validateRequestParams(req, res, next) {
+    if (req.params.name === null || undefined) {
+        console.log(req.params.nam);
+        res
+            .status(404)
+            .json(response_handler_1.default.responseJson(response_handler_1.default.responses.invalidParam))
+            .end();
+    }
+    else {
+        next();
+    }
+}
+exports.validateRequestParams = validateRequestParams;

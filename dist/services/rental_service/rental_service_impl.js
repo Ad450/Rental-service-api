@@ -27,17 +27,15 @@ class RentalServiceImpl {
     async getBook(param) {
         const { req, res, next } = param;
         try {
-            const result = await this.rentalServiceHandler.getBook(req, res);
-            return result;
+            await this.rentalServiceHandler.getBook(req, res);
         }
         catch (error) {
             // TODO: use logger
             console.log(error);
-            return null;
         }
     }
     async getAllBook(param) {
-        throw new Error("Method not implemented.");
+        console.log("I got here");
     }
 }
 exports.default = RentalServiceImpl;

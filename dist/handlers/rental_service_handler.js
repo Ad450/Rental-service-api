@@ -13,16 +13,7 @@ class RentalServiceHandler {
         const encryptedPassword = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         const hash = await (0, helpers_1.hashData)(req.body.name, req.body.name);
         try {
-            const book = await this.bookDatabase.retrieveOne({
-                name: req.body.name,
-                hash: hash,
-                /// params below are not needed to retrieve book
-                /// exist to escape missing params in type rent: RentalParams
-                rented: true,
-                rentedBy: encryptedPassword,
-                startDate: req.body.startDate,
-                endDate: req.body.endDate,
-            });
+            const book = await this.bookDatabase.retrieveOne(req.params.name);
             if (book === null || undefined) {
                 this.bookDatabase.create({
                     name: req.body.name,
@@ -59,15 +50,7 @@ class RentalServiceHandler {
     async turnInBook(req, res) {
         const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.bookDatabase.retrieveOne({
-                name: req.body.name,
-                hash: hash,
-                /// params below are not necessary needed to retrieve book
-                rented: false,
-                rentedBy: "",
-                startDate: "",
-                endDate: "",
-            });
+            const book = await this.bookDatabase.retrieveOne(req.params.name);
             if (!book) {
                 res
                     .status(200)
@@ -98,15 +81,7 @@ class RentalServiceHandler {
         const encryptedPassword = await (0, helpers_1.encryptData)(req);
         const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.bookDatabase.retrieveOne({
-                name: req.body.name,
-                hash: hash,
-                // params below not needed to retrieve book
-                rented: false,
-                rentedBy: encryptedPassword,
-                startDate: req.body.startDate,
-                endDate: req.body.endDate,
-            });
+            const book = await this.bookDatabase.retrieveOne(req.params.name);
             if (book === null || undefined) {
                 res
                     .status(500)

@@ -8,12 +8,12 @@ import {
 import { DatabaseParam, UserParam } from "../interfaces/database_service_param";
 import ApiResponse from "../response_handlers/response_handler";
 import Injector from "../di/injector";
-import { UserDatabase } from "../db/postgresql/prisma_db";
+import { UserDatabasePrisma } from "../db/postgresql/prisma_db";
 
 export default class AuthServiceHandler {
-  userDatabase: UserDatabase;
+  userDatabase: UserDatabasePrisma;
 
-  constructor(userDatabase: UserDatabase) {
+  constructor(userDatabase: UserDatabasePrisma) {
     this.userDatabase = userDatabase;
   }
 

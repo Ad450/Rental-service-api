@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { encryptData as encryptPassword, hashData } from "../core/helpers";
 
 import ApiResponse from "../response_handlers/response_handler";
-import { BookDatabase, BookType } from "../db/postgresql/prisma_db";
+import { BookDatabase } from "../db/postgresql/prisma_db";
+import { BookType } from "../db/db_interface";
 
 export default class RentalServiceHandler {
   bookDatabase: BookDatabase;
@@ -22,7 +23,7 @@ export default class RentalServiceHandler {
     try {
       const book = await this.bookDatabase.retrieveOne(parseInt(req.body.id));
 
-      if (book === null || undefined) {
+      if (!book) {
         this.bookDatabase.create({
           name: req.body.name,
           hash: hash,

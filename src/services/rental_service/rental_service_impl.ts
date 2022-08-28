@@ -2,7 +2,6 @@ import RentalServiceHandler from "../../handlers/rental_service_handler";
 import { BookFromDb } from "../../interfaces/database_service_param";
 import RentalServiceParam from "../../interfaces/rental_service_param";
 import RentalService from "./rental_service";
-import { BookType } from "../../db/postgresql/prisma_db";
 
 export default class RentalServiceImpl
   implements RentalService<RentalServiceParam>

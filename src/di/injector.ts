@@ -10,7 +10,7 @@ import Signup from "../usecases/auth_usecases/signup";
 import GetAllBooks from "../usecases/rental_usecases/get_all_books";
 import RentBook from "../usecases/rental_usecases/rent_book";
 import TurnInBook from "../usecases/rental_usecases/turn_in_book";
-import { UserDatabase, BookDatabase } from "../db/postgresql/prisma_db";
+import { UserDatabasePrisma, BookDatabase } from "../db/postgresql/prisma_db";
 import { PrismaClient } from "@prisma/client";
 import GetBook from "../usecases/rental_usecases/get_book";
 
@@ -19,22 +19,22 @@ export default abstract class Injector {
 
   static login = new Login(
     new AuthServiceImpl(
-      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+      new AuthServiceHandler(new UserDatabasePrisma(new PrismaClient()))
     )
   );
   static signup = new Signup(
     new AuthServiceImpl(
-      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+      new AuthServiceHandler(new UserDatabasePrisma(new PrismaClient()))
     )
   );
   static getUser = new GetUser(
     new AuthServiceImpl(
-      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+      new AuthServiceHandler(new UserDatabasePrisma(new PrismaClient()))
     )
   );
   static getAllUsers = new GetAllUsers(
     new AuthServiceImpl(
-      new AuthServiceHandler(new UserDatabase(new PrismaClient()))
+      new AuthServiceHandler(new UserDatabasePrisma(new PrismaClient()))
     )
   );
   static getBook = new GetBook(
@@ -58,6 +58,6 @@ export default abstract class Injector {
       new RentalServiceHandler(new BookDatabase(new PrismaClient()))
     )
   );
-  static userDatabase = new UserDatabase(new PrismaClient());
+  static userDatabase = new UserDatabasePrisma(new PrismaClient());
   static bookDatabase = new BookDatabase(new PrismaClient());
 }

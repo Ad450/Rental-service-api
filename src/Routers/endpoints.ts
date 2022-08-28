@@ -50,14 +50,14 @@ export const routers: Array<EndpointsInterface> = [
     method: routerMethods.GET,
     handlers: (req: Request, res: Response, next: NextFunction) =>
       Injector.getUser.call({ req, res, next }),
-    middlewares: [validateToken, validateAuthInput],
+    middlewares: [validateToken, validateRequestParams],
   },
   {
     route: getAllUsers,
     method: routerMethods.GET,
     handlers: (req: Request, res: Response, next: NextFunction) =>
       Injector.getAllUsers.call({ req, res, next }),
-    middlewares: [validateToken, validateAuthInput],
+    middlewares: [validateToken, validateRequestParams],
   },
 
   /// Rental Service
@@ -87,6 +87,6 @@ export const routers: Array<EndpointsInterface> = [
     method: routerMethods.GET,
     handlers: (req: Request, res: Response, next: NextFunction) =>
       Injector.getAllBooks.call({ req, res, next }),
-    middlewares: [validateToken, validateRentalInput],
+    middlewares: [validateToken, validateRequestParams],
   },
 ];

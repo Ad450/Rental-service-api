@@ -154,7 +154,7 @@ export const validateLoginPassword = async (
 
   /// Only email is used by db to retrieve user
   /// Other params exist to prevent missing params compilation error
-  const user = await Injector.userDatabase.retrieveOne(req.params.email);
+  const user = await Injector.userDatabase.retrieveOne(Number(req.params.id));
 
   if (user === null || user === undefined) {
     res
@@ -188,9 +188,7 @@ export async function validateRequestParams(
   res: Response,
   next: NextFunction
 ) {
-  if (req.params.name === null || undefined) {
-    console.log(req.params.nam);
-
+  if (req.params === null) {
     res
       .status(404)
       .json(ApiResponse.responseJson(ApiResponse.responses.invalidParam))

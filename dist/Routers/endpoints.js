@@ -41,13 +41,13 @@ exports.routers = [
         route: getUser,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getUser.call({ req, res, next }),
-        middlewares: [validators_2.validateToken, validators_2.validateAuthInput],
+        middlewares: [validators_2.validateToken, validators_1.validateRequestParams],
     },
     {
         route: getAllUsers,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getAllUsers.call({ req, res, next }),
-        middlewares: [validators_2.validateToken, validators_2.validateAuthInput],
+        middlewares: [validators_2.validateToken, validators_1.validateRequestParams],
     },
     /// Rental Service
     {
@@ -72,6 +72,6 @@ exports.routers = [
         route: getAllBooks,
         method: endpoints_interface_1.routerMethods.GET,
         handlers: (req, res, next) => injector_1.default.getAllBooks.call({ req, res, next }),
-        middlewares: [validators_2.validateToken, validators_2.validateRentalInput],
+        middlewares: [validators_2.validateToken, validators_1.validateRequestParams],
     },
 ];

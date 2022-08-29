@@ -1,29 +1,7 @@
 import { Book, PrismaClient, User } from "@prisma/client";
+import { BookType, Database, UserType } from "../db_interface";
 
-export type UserType = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-export type BookType = {
-  name: string;
-  hash: string;
-  startDate: string | null;
-  endDate: string | null;
-  rented: boolean;
-  rentedBy: string | null;
-};
-
-abstract class Prisma<K, Y> {
-  abstract create<T extends K>(param: T): Promise<void>;
-  abstract update<T extends K>(param: T): Promise<void>;
-  abstract delete<T extends K>(param: T): Promise<void>;
-  abstract retrieve(): Promise<Array<Y> | null>;
-  abstract retrieveOne(id: number | string): Promise<Y | null>;
-}
-
-export class UserDatabase implements Prisma<UserType, User> {
+export class UserDatabasePrisma implements Database<UserType, User> {
   prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -82,7 +60,7 @@ export class UserDatabase implements Prisma<UserType, User> {
   async delete<T extends UserType>(param: T): Promise<void> {}
 }
 
-export class BookDatabase implements Prisma<BookType, Book> {
+export class BookDatabase implements Database<BookType, Book> {
   prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {

@@ -11,6 +11,7 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --production
 
 COPY . .
+COPY prisma ./prisma/
 
 CMD [ "node", "dist/index.js" ]
 

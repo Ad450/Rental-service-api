@@ -10,7 +10,7 @@ class RentalServiceHandler {
         this.bookDatabase = bookDatabase;
     }
     async rentBook(req, res, next) {
-        const encryptedPassword = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
+        const encryptedPassword = await (0, helpers_1.hashData)(req.body.endDate, req.body.startDate);
         const hash = await (0, helpers_1.hashData)(req.body.name, req.body.name);
         console.log(req.body);
         try {
@@ -20,6 +20,7 @@ class RentalServiceHandler {
                     name: req.body.name,
                     hash: hash,
                     rented: true,
+                    //TODO: change rentedBy
                     rentedBy: encryptedPassword,
                     startDate: req.body.startDate,
                     endDate: req.body.endDate,
@@ -51,7 +52,7 @@ class RentalServiceHandler {
     async turnInBook(req, res) {
         const hash = await (0, helpers_1.hashData)(req.body.password, req.body.startDate);
         try {
-            const book = await this.bookDatabase.retrieveOne(Number(req.params.name));
+            const book = await this.bookDatabase.retrieveOne(Number(req.body.id));
             if (!book) {
                 res
                     .status(200)

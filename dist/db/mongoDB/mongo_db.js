@@ -36,26 +36,32 @@ class UserDatabaseMongo {
         }
     }
     async retrieve() {
-        let usersArray;
+        let usersArray = [];
         try {
             const users = await this.mongoModel.find().lean();
-            return users
-                .map((user) => {
-                return {
-                    id: user._id,
+            users.forEach((user) => {
+                usersArray.push({
                     name: user.name,
                     password: user.password,
                     email: user.email,
-                };
-            })
-                .toList();
+                });
+            });
+            return usersArray;
         }
         catch (error) {
             console.log(error);
+            throw new Error("mongo user retrieval failed");
         }
     }
-    retrieveOne(id) {
-        throw new Error("Method not implemented.");
+    async retrieveOne(id) {
+        try {
+            const user = await this.mongoModel.findOne({ email: id }).lean();
+            return user;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("mongo user retrieval failed");
+        }
     }
 }
 exports.default = UserDatabaseMongo;

@@ -14,7 +14,7 @@ export default class RentalServiceHandler {
 
   async rentBook(req: Request, res: Response, next: NextFunction) {
     const encryptedPassword = await hashData(
-      req.body.password,
+      req.body.endDate,
       req.body.startDate
     );
     const hash = await hashData(req.body.name, req.body.name);
@@ -28,6 +28,7 @@ export default class RentalServiceHandler {
           name: req.body.name,
           hash: hash,
           rented: true,
+          //TODO: change rentedBy
           rentedBy: encryptedPassword,
           startDate: req.body.startDate,
           endDate: req.body.endDate,
@@ -61,7 +62,7 @@ export default class RentalServiceHandler {
     const hash = await hashData(req.body.password, req.body.startDate);
 
     try {
-      const book = await this.bookDatabase.retrieveOne(Number(req.params.name));
+      const book = await this.bookDatabase.retrieveOne(Number(req.body.id));
 
       if (!book) {
         res

@@ -21,7 +21,7 @@ jobs:
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
-        image: rental
+        image: test-repo1/rental
         tags: v1
         registry: registry-url.io/emmanuel450666/test-repo1
         dockerfile: Dockerfile

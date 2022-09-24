@@ -23,7 +23,7 @@ jobs:
       with:
         image: test-repo1/rental
         tags: v1
-        registry: registry-url.io/emmanuel450666/test-repo1
+        registry: registry-url.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}

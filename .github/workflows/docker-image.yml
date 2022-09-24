@@ -14,5 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: install depencies
+      run: yarn 
+    - name: run unit test
+      run: yarn test
+    - name: build docker file
       run: docker build . --file Dockerfile --tag rental:v1

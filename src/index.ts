@@ -63,7 +63,7 @@ app.get(
 
 const startApp = async () => {
   try {
-    app.listen(process.env.SERVER_PORT || 3000, () => {
+    app.listen(process.env.PORT || 3000, () => {
       console.log(
         "server started on port " + process.env.SERVER_PORT + ", more fire"
       );
